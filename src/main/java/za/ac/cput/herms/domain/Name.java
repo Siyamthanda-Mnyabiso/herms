@@ -66,7 +66,7 @@ public class Name {
             return this;
         }
 
-        public Name builder(){
+        public Name build(){
             return new Name(this);
         }
     }

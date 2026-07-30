@@ -19,11 +19,5 @@ class NameFactoryTest {
     void testToFail(){
         assertThrows(IllegalArgumentException.class, ()->
                 NameFactory.createName("","Gee","Mangaliso"));
-//                new Name.Builder()
-//                        .setFirstName("")
-//                        .setMiddleName("Gee")
-//                        .setLastName("Mangaliso")
-//                        .build()
-//        );
     }
 }

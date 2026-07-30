@@ -12,12 +12,12 @@ class NameFactoryTest {
         Name name = NameFactory.createName("Gee","","Mangaliso");
 //        assertEquals("Gee",name.getFirstName());
         assertNotNull(name);
-        System.out.println("Name:"+name);
+        System.out.println(name);
     }
 
     @Test
     void testToFail(){
         assertThrows(IllegalArgumentException.class, ()->
-                NameFactory.createName("","Gee","Mangaliso"));
+                NameFactory.createName("","Gee",""));
     }
 }

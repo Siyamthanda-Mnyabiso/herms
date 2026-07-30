@@ -1,6 +1,7 @@
 package za.ac.cput.herms.util;
 
 import java.util.Map;
+import org.apache.commons.validator.routines.EmailValidator;
 
 public class Helper {
     public static boolean isNullOrEmpty(String str){
@@ -10,20 +11,20 @@ public class Helper {
         return false;
     }
 
-    public static boolean isPostalCodeValid(String str){
+    public static boolean isPostalCodeValid(String code){
         String regex = "^\\d{4}$";
-        if((!str.isEmpty()) && (str.matches(regex))){
-            return true;
+        if((code== null || (code.isBlank()))){
+            return false;
         }
-        return false;
+        return code.matches(regex);
     }
 
-    public static boolean isCityValid(String str){
+    public static boolean isCityValid(String city){
         String regex = "^[A-Za-z\\\\s'-]{2,50}$";
-        if((!str.isEmpty()) || (str.matches(regex))){
-            return true;
+        if((city== null || (city.isBlank()))){
+            return false;
         }
-        return false;
+        return city.matches(regex);
     }
 
     private static final Map<String, String> provinces = Map.ofEntries(
@@ -64,6 +65,21 @@ public class Helper {
             return false;
         }
         return provinces.containsKey(str.trim());
+    }
+
+    public static boolean isEmailValid(String email){
+       if((email==null || (email.isBlank()))){
+           return false;
+       }
+       return EmailValidator.getInstance().isValid(email.trim());
+    }
+
+    public static boolean isMobileNumberValid(String phone){
+        String regex =  "^(\\+27|0)[6-8][0-9]{8}$";
+        if((phone==null) || (phone.isBlank())){
+            return false;
+        }
+        return phone.matches(regex.trim());
     }
 
 

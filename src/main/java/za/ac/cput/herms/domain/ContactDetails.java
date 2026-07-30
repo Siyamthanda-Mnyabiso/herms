@@ -2,8 +2,10 @@ package za.ac.cput.herms.domain;
 
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
-public class ContactDetails {
+public class ContactDetails implements ValueObject{
     private String mobileNumber;
     private String email;
 
@@ -55,5 +57,16 @@ public class ContactDetails {
         public ContactDetails build(){
             return new ContactDetails(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ContactDetails that)) return false;
+        return Objects.equals(mobileNumber, that.mobileNumber) && Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mobileNumber, email);
     }
 }

@@ -2,8 +2,10 @@ package za.ac.cput.herms.domain;
 
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
-public class Name {
+public class Name implements ValueObject {
     private String firstName;
     private String middleName;
     private String lastName;
@@ -69,5 +71,16 @@ public class Name {
         public Name build(){
             return new Name(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Name name)) return false;
+        return Objects.equals(firstName, name.firstName) && Objects.equals(middleName, name.middleName) && Objects.equals(lastName, name.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, middleName, lastName);
     }
 }

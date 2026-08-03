@@ -2,8 +2,10 @@ package za.ac.cput.herms.domain;
 
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
-public class Address {
+public class Address implements ValueObject {
     private String streetName;
     private String postalCode;
     private String city;
@@ -83,5 +85,16 @@ public class Address {
         public Address build(){
             return new Address(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Address address)) return false;
+        return Objects.equals(streetName, address.streetName) && Objects.equals(postalCode, address.postalCode) && Objects.equals(city, address.city) && Objects.equals(province, address.province);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(streetName, postalCode, city, province);
     }
 }

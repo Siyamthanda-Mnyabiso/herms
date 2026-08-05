@@ -1,5 +1,8 @@
 package za.ac.cput.herms.util;
 
+import java.sql.Time;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Map;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -81,6 +84,25 @@ public class Helper {
         }
         return phone.matches(regex.trim());
     }
-
+    public static boolean isDateValid(Date date){
+        if(date == null ){
+            return false;
+        }
+        java.time.LocalDate bookingDate = date.toInstant()
+                .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            return !bookingDate.isBefore(java.time.LocalDate.now()) ;
+    }
+    public static boolean isStartDayEndDay(Date startDay,Date endDay){
+        if((startDay == null || endDay == null)){
+            return false;
+        }
+        return startDay.before(endDay);
+    }
+    public enum BookingStatus{
+        PENDING,
+        CONFIRMED,
+        CANCELED,
+        COMPLETED
+    }
 
 }

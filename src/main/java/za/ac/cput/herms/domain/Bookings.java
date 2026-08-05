@@ -1,9 +1,7 @@
 package za.ac.cput.herms.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import za.ac.cput.herms.util.Helper;
 
 import java.sql.Time;
 import java.util.Date;
@@ -11,11 +9,12 @@ import java.util.Date;
 @Entity
 public class Bookings {
     @Id
-    private String bookingId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bookingId;
     private Date bookingDate;
-    private Time startTime;
-    private Time endTime;
-    private Enum status;
+    private Date startDay;
+    private Date endDay;
+    private Helper.BookingStatus status;
     @ManyToOne
     @JoinColumn(name ="person_id")
     private Person person;
@@ -24,13 +23,13 @@ public class Bookings {
     public Bookings(Builder builder){
         this.bookingId = builder.bookingId;
         this.bookingDate = builder.bookingDate;
-        this.startTime = builder.startTime;
-        this.endTime = builder.endTime;
+        this.startDay = builder.startDay;
+        this.endDay = builder.endDay;
         this.status = builder.status;
         this.person = builder.person;
     }
 
-    public String getBookingId() {
+    public Long getBookingId() {
         return bookingId;
     }
 
@@ -38,15 +37,15 @@ public class Bookings {
         return bookingDate;
     }
 
-    public Time getStartTime() {
-        return startTime;
+    public Date getStartDay() {
+        return startDay;
     }
 
-    public Time getEndTime() {
-        return endTime;
+    public Date getEndDay() {
+        return endDay;
     }
 
-    public Enum getStatus() {
+    public Helper.BookingStatus getStatus() {
         return status;
     }
 
@@ -59,21 +58,21 @@ public class Bookings {
         return "Bookings{" +
                 "bookingId='" + bookingId + '\'' +
                 ", bookingDate=" + bookingDate +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
+                ", startTime=" + startDay +
+                ", endTime=" + endDay +
                 ", status=" + status +
                 ", person=" + person +
                 '}';
     }
     public static class Builder{
-        private String bookingId;
+        private Long bookingId;
         private Date bookingDate;
-        private Time startTime;
-        private Time endTime;
-        private Enum status;
+        private Date startDay;
+        private Date endDay;
+        private Helper.BookingStatus status;
         private Person person;
 
-        public Builder setBookingId(String bookingId){
+        public Builder setBookingId(Long bookingId){
             this.bookingId = bookingId;
             return this;
         }
@@ -81,15 +80,15 @@ public class Bookings {
             this.bookingDate = bookingDate;
             return this;
         }
-        public Builder setStartTime(Time startTime){
-            this.startTime= startTime;
+        public Builder setStartDay(Date startDay){
+            this.startDay= startDay;
             return this;
         }
-        public Builder setEndTime(Time endTime){
-            this.endTime = endTime;
+        public Builder setEndDay(Date endDay){
+            this.endDay = endDay;
             return this;
         }
-        public Builder setStatus(Enum status ){
+        public Builder setStatus(Helper.BookingStatus status ){
             this.status = status;
             return this;
         }
@@ -100,8 +99,8 @@ public class Bookings {
         public Builder copy(Bookings booking){
             this.bookingId = booking.bookingId;
             this.bookingDate = booking.bookingDate;
-            this.startTime = booking.startTime;
-            this.endTime = booking.endTime;
+            this.startDay = booking.startDay;
+            this.endDay = booking.endDay;
             this.status = booking.status;
             this.person = booking.person;
             return this;

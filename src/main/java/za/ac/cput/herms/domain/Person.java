@@ -10,7 +10,8 @@ import java.util.List;
 public abstract class Person {
 
     @Id
-    protected String personId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long personId;
     @Embedded
     protected Name name;
     @Embedded
@@ -23,7 +24,7 @@ public abstract class Person {
 
     public Person(){}
 
-    public String getPersonId() {
+    public Long getPersonId() {
         return personId;
     }
 

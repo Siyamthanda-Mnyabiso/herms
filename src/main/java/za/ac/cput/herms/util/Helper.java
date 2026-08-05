@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 import org.apache.commons.validator.routines.EmailValidator;
+import za.ac.cput.herms.domain.Person;
 
 public class Helper {
     public static boolean isNullOrEmpty(String str){
@@ -13,7 +14,6 @@ public class Helper {
         }
         return false;
     }
-
     public static boolean isPostalCodeValid(String code){
         String regex = "^\\d{4}$";
         if((code== null || (code.isBlank()))){
@@ -105,4 +105,10 @@ public class Helper {
         COMPLETED
     }
 
+    public static boolean isPersonNullOrEmpty(Person person){
+        if((person == null)){
+            return true;
+        }
+        return false;
+    }
 }

@@ -111,4 +111,20 @@ public class Helper {
         }
         return false;
     }
+
+    public static boolean isNurseLicenseNoValid(String licenseNo){
+        String regex = "^\\d{8}$";
+        if((licenseNo == null) || (licenseNo.isBlank())){
+            return false;
+        }
+        return licenseNo.trim().matches(regex);
+    }
+
+    public static boolean isDoctorLicenseNoValid(String licenseNo){
+        String regex = "^[A-Za-z]{2}\\d{7}$";
+        if((licenseNo == null) || (licenseNo.isBlank())){
+            return false;
+        }
+        return licenseNo.trim().matches(regex);
+    }
 }

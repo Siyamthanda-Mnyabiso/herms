@@ -20,7 +20,7 @@ public class StaffServiceImpl implements IStaffService {
 
     @Autowired
     public StaffServiceImpl(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+        this.personRepository= personRepository;
     }
 
     @Override

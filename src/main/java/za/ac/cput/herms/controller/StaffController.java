@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.herms.domain.Doctor;
 import za.ac.cput.herms.domain.Nurse;
+import za.ac.cput.herms.domain.Teacher;
+import za.ac.cput.herms.domain.Pharmacist;
 import za.ac.cput.herms.service.IStaffService;
 
 import java.util.List;
@@ -93,5 +95,79 @@ public class StaffController {
     @GetMapping("/doctor/{personId}/license-valid")
     public ResponseEntity<Boolean> isDoctorLicenseValid(@PathVariable Long personId) {
         return ResponseEntity.ok(staffService.isDoctorLicenseValid(personId));
+    }
+
+    @PostMapping("/teacher/create")
+    public ResponseEntity<Teacher> createTeacher(@RequestBody Teacher teacher) {
+        return new ResponseEntity<>(staffService.createTeacher(teacher), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/teacher/read/{personId}")
+    public ResponseEntity<Teacher> getTeacher(@PathVariable Long personId) {
+        Teacher teacher = staffService.getTeacherById(personId);
+        return (teacher == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(teacher);
+    }
+
+    @GetMapping("/teacher/all")
+    public ResponseEntity<List<Teacher>> getAllTeachers() {
+        return ResponseEntity.ok(staffService.getAllTeachers());
+    }
+
+    @PutMapping("/teacher/update")
+    public ResponseEntity<Teacher> updateTeacher(@RequestBody Teacher teacher) {
+        return ResponseEntity.ok(staffService.updateTeacher(teacher));
+    }
+
+    @DeleteMapping("/teacher/delete/{personId}")
+    public ResponseEntity<Void> deleteTeacher(@PathVariable Long personId) {
+        staffService.deleteTeacher(personId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/teacher/{personId}/available")
+    public ResponseEntity<Boolean> isTeacherAvailable(@PathVariable Long personId) {
+        return ResponseEntity.ok(staffService.isTeacherAvailable(personId));
+    }
+
+    @GetMapping("/teacher/{personId}/license-valid")
+    public ResponseEntity<Boolean> isTeacherLicenseValid(@PathVariable Long personId) {
+        return ResponseEntity.ok(staffService.isTeacherLicenseValid(personId));
+    }
+
+    @PostMapping("/pharmacist/create")
+    public ResponseEntity<Pharmacist> createPharmacist(@RequestBody Pharmacist pharmacist) {
+        return new ResponseEntity<>(staffService.createPharmacist(pharmacist), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/pharmacist/read/{personId}")
+    public ResponseEntity<Pharmacist> getPharmacist(@PathVariable Long personId) {
+        Pharmacist pharmacist = staffService.getPharmacistById(personId);
+        return (pharmacist == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(pharmacist);
+    }
+
+    @GetMapping("/pharmacist/all")
+    public ResponseEntity<List<Pharmacist>> getAllPharmacists() {
+        return ResponseEntity.ok(staffService.getAllPharmacists());
+    }
+
+    @PutMapping("/pharmacist/update")
+    public ResponseEntity<Pharmacist> updatePharmacist(@RequestBody Pharmacist pharmacist) {
+        return ResponseEntity.ok(staffService.updatePharmacist(pharmacist));
+    }
+
+    @DeleteMapping("/pharmacist/delete/{personId}")
+    public ResponseEntity<Void> deletePharmacist(@PathVariable Long personId) {
+        staffService.deletePharmacist(personId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/pharmacist/{personId}/available")
+    public ResponseEntity<Boolean> isPharmacistAvailable(@PathVariable Long personId) {
+        return ResponseEntity.ok(staffService.isPharmacistAvailable(personId));
+    }
+
+    @GetMapping("/pharmacist/{personId}/license-valid")
+    public ResponseEntity<Boolean> isPharmacistLicenseValid(@PathVariable Long personId) {
+        return ResponseEntity.ok(staffService.isPharmacistLicenseValid(personId));
     }
 }

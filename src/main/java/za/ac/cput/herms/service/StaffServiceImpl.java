@@ -9,6 +9,8 @@ import za.ac.cput.herms.domain.Person;
 import za.ac.cput.herms.repository.PersonRepository;
 import za.ac.cput.herms.service.IStaffService;
 import za.ac.cput.herms.util.Helper;
+import za.ac.cput.herms.domain.Teacher;
+import za.ac.cput.herms.domain.Pharmacist;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,5 +105,87 @@ public class StaffServiceImpl implements IStaffService {
     public boolean isDoctorLicenseValid(Long personId) {
         Doctor doctor = getDoctorById(personId);
         return doctor != null && Helper.isDoctorLicenseNoValid(doctor.getLicenseNo());
+    }
+
+    @Override
+    public Teacher createTeacher(Teacher teacher) {
+        return personRepository.save(teacher);
+    }
+
+    @Override
+    public Teacher getTeacherById(Long personId) {
+        Person person = personRepository.findByPersonId(personId);
+        return (person instanceof Teacher) ? (Teacher) person : null;
+    }
+
+    @Override
+    public List<Teacher> getAllTeachers() {
+        return personRepository.findAll().stream()
+                .filter(person -> person instanceof Teacher)
+                .map(person -> (Teacher) person)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Teacher updateTeacher(Teacher teacher) {
+        return personRepository.save(teacher);
+    }
+
+    @Override
+    public void deleteTeacher(Long personId) {
+        personRepository.deleteById(personId);
+    }
+
+    @Override
+    public boolean isTeacherAvailable(Long personId) {
+        Teacher teacher = getTeacherById(personId);
+        return teacher != null && teacher.getAvailabilityStatus() == Teacher.AvailabilityStatus.AVAILABLE;
+    }
+
+    @Override
+    public boolean isTeacherLicenseValid(Long personId) {
+        Teacher teacher = getTeacherById(personId);
+        return teacher != null && Helper.isTeacherLicenseNoValid(teacher.getLicenseNo());
+    }
+
+    @Override
+    public Pharmacist createPharmacist(Pharmacist pharmacist) {
+        return personRepository.save(pharmacist);
+    }
+
+    @Override
+    public Pharmacist getPharmacistById(Long personId) {
+        Person person = personRepository.findByPersonId(personId);
+        return (person instanceof Pharmacist) ? (Pharmacist) person : null;
+    }
+
+    @Override
+    public List<Pharmacist> getAllPharmacists() {
+        return personRepository.findAll().stream()
+                .filter(person -> person instanceof Pharmacist)
+                .map(person -> (Pharmacist) person)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Pharmacist updatePharmacist(Pharmacist pharmacist) {
+        return personRepository.save(pharmacist);
+    }
+
+    @Override
+    public void deletePharmacist(Long personId) {
+        personRepository.deleteById(personId);
+    }
+
+    @Override
+    public boolean isPharmacistAvailable(Long personId) {
+        Pharmacist pharmacist = getPharmacistById(personId);
+        return pharmacist != null && pharmacist.getAvailabilityStatus() == Pharmacist.AvailabilityStatus.AVAILABLE;
+    }
+
+    @Override
+    public boolean isPharmacistLicenseValid(Long personId) {
+        Pharmacist pharmacist = getPharmacistById(personId);
+        return pharmacist != null && Helper.isPharmacistLicenseNoValid(pharmacist.getLicenseNo());
     }
 }

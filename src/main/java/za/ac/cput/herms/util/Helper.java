@@ -127,4 +127,18 @@ public class Helper {
         }
         return licenseNo.trim().matches(regex);
     }
+
+    public static boolean isTeacherLicenseNoValid(String licenseNo){
+        String regex = "^\\d{6}$";
+        if((licenseNo == null) || (licenseNo.isBlank())){
+            return false;
+        }
+        return licenseNo.trim().matches(regex);
+    }
+
+    public static boolean isPharmacistLicenseNoValid(String licenseNo){
+        // Pharmacist format matches Doctors
+        return isDoctorLicenseNoValid(licenseNo);
+    }
+
 }

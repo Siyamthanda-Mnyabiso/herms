@@ -70,22 +70,22 @@ public class School extends Organization {
         private Type type;
         private SchoolType typeOfSchool;
 
-        public Builder schoolType(String schoolType) {
+        public Builder setSchoolType(String schoolType) {
             this.schoolType = schoolType;
             return this;
         }
 
-        public Builder address(String address) {
+        public Builder setAddress(String address) {
             this.address = address;
             return this;
         }
 
-        public Builder type(Type type) {
+        public Builder setType(Type type) {
             this.type = type;
             return this;
         }
 
-        public Builder schoolTypeOfSchool(SchoolType typeOfSchool) {
+        public Builder setSchoolTypeOfSchool(SchoolType typeOfSchool) {
             this.typeOfSchool = typeOfSchool;
             return this;
         }

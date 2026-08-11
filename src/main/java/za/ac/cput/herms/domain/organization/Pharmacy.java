@@ -8,14 +8,14 @@ import java.util.Objects;
 
 @Entity
 @Getter
-public class Phamarcy extends Organization {
+public class Pharmacy extends Organization {
     @Column(nullable = false)
     private String phamarcyType;
 
     @Column(nullable = false)
     private String address;
 
-    public Phamarcy(){}
+    public Pharmacy(){}
 
     @Override
     public String toString(){
@@ -27,18 +27,18 @@ public class Phamarcy extends Organization {
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
-        if(!(o instanceof Phamarcy)) return false;
+        if(!(o instanceof Pharmacy)) return false;
         return super.equals(o)
-                && Objects.equals(phamarcyType, ((Phamarcy)o).phamarcyType)
-                && Objects.equals(address, ((Phamarcy)o).address);
+                && Objects.equals(phamarcyType, ((Pharmacy)o).phamarcyType)
+                && Objects.equals(address, ((Pharmacy)o).address);
     }
 
     public static class Builder{
-        private String phamarcyType;
+        private String pharmacyType;
         private String address;
 
-        public Builder setPhamarcyType(String phamarcyType){
-            this.phamarcyType = phamarcyType;
+        public Builder setPharmacyType(String pharmacyType){
+            this.pharmacyType = pharmacyType;
             return this;
         }
 
@@ -47,15 +47,15 @@ public class Phamarcy extends Organization {
             return this;
         }
 
-        public Builder copy(Phamarcy phamarcy){
-            this.phamarcyType = phamarcy.phamarcyType;
-            this.address = phamarcy.address;
+        public Builder copy(Pharmacy pharmacy){
+            this.pharmacyType = pharmacy.phamarcyType;
+            this.address = pharmacy.address;
             return this;
         }
 
-        public Phamarcy build(){
-            Phamarcy phamarcy = new Phamarcy();
-            return  phamarcy;
+        public Pharmacy build(){
+            Pharmacy pharmacy = new Pharmacy();
+            return  pharmacy;
         }
     }
 }

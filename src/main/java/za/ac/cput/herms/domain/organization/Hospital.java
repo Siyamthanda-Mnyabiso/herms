@@ -3,6 +3,8 @@ package za.ac.cput.herms.domain.organization;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.antlr.v4.runtime.atn.SemanticContext;
+import za.ac.cput.herms.domain.ContactDetails;
 
 import java.util.Objects;
 
@@ -24,12 +26,11 @@ public class Hospital extends Organization {
         Private, Public;
     }
 
-
-    public Hospital() {
-
+    protected Hospital(){
     }
 
-    public Hospital(Builder builder) {
+    protected Hospital(Builder builder) {
+        super(builder);
         this.hospitalType = builder.hospitalType;
         this.address = builder.address;
         this.typeOfHospital = builder.typeOfHospital;
@@ -57,7 +58,8 @@ public class Hospital extends Organization {
         return Objects.hash(super.hashCode(), hospitalType, address,  typeOfHospital);
     }
 
-    public static class Builder{
+    public static class Builder extends Organization.Builder {
+
         private String hospitalType;
         private String address;
         private HospitalType typeOfHospital;
@@ -76,7 +78,26 @@ public class Hospital extends Organization {
         return this;
     }
 
+    @Override
+    public Builder setOrganizationId(String organizationId) {
+        super.setOrganizationId(organizationId);
+        return this;
+    }
+
+    @Override
+    public Builder setOrganizationName(String organizationName) {
+        super.setOrganizationName(organizationName);
+        return this;
+    }
+
+    @Override
+    public Builder setContactDetails(ContactDetails contactDetails) {
+        super.setContactDetails(contactDetails);
+        return this;
+    }
+
     public Builder copy(Hospital hospital){
+        super.copy(hospital);
         this.hospitalType = hospital.hospitalType;
         this.address = hospital.address;
         this.typeOfHospital = hospital.typeOfHospital;

@@ -11,8 +11,6 @@ public class SchoolFactory {
             return null;
         }
 
-        if
-
         return new School.Builder()
                 .setSchoolType(schoolType)
                 .setAddress(Address)

@@ -3,11 +3,12 @@ package za.ac.cput.herms.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.herms.domain.Bookings;
+import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.repository.BookingsRepository;
 
 import java.util.List;
 @Service
-public class BookingsServiceImpl implements IBookingService{
+public class eBookingsServiceImpl implements IBookingService{
     private final BookingsRepository bookingsService;
 
     @Autowired
@@ -21,7 +22,7 @@ public class BookingsServiceImpl implements IBookingService{
     }
 
     @Override
-    public Bookings Read(Long aLong) {
+    public List<Pharmacy> Read(Long aLong) {
         return bookingsService.findById(aLong).orElse(null);
     }
 

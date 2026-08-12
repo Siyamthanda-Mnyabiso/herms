@@ -18,6 +18,7 @@ class AddressFactoryTest {
     }
 
     @Test
+
     void testToFail(){
         assertThrows(IllegalArgumentException.class,()->
                 AddressFactory.createAddress("Nondulo str","3456677","","CW"));

@@ -13,8 +13,6 @@ public class School extends Organization {
     @Column(nullable = false)
     private String schoolType;
 
-    @Column(nullable = false)
-    private String address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -41,7 +39,6 @@ public class School extends Organization {
     {
         return super.toString() +
                 "\nSchoolType: " + schoolType +
-                "\nAddress: " + address +
                 "\nType: " + type +
                 "\nSchoolType: " + typeOfSchool;
     }
@@ -54,14 +51,13 @@ public class School extends Organization {
         School that = (School) o;
         return super.equals(o)
                 && Objects.equals(schoolType, that.schoolType)
-                && Objects.equals(address, that.address)
                 && Objects.equals(type, that.type)
                 && Objects.equals(typeOfSchool, that.typeOfSchool);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(schoolType, address, type, typeOfSchool);
+        return Objects.hash(schoolType,type, typeOfSchool);
     }
 
     public static class Builder {
@@ -92,7 +88,6 @@ public class School extends Organization {
 
         public Builder copy(School school) {
             this.schoolType = school.schoolType;
-            this.address = school.address;
             this.type = school.type;
             this.typeOfSchool = school.typeOfSchool;
             return this;

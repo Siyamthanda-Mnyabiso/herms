@@ -13,8 +13,6 @@ public class Hospital extends Organization {
     @Column(nullable = false)
     private String hospitalType;
 
-    @Column(nullable = false)
-    private String address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -31,7 +29,6 @@ public class Hospital extends Organization {
 
     public Hospital(Builder builder) {
         this.hospitalType = builder.hospitalType;
-        this.address = builder.address;
         this.typeOfHospital = builder.typeOfHospital;
     }
 
@@ -39,7 +36,6 @@ public class Hospital extends Organization {
     public String toString(){
         return super.toString() +
                 "Hospital type" + hospitalType +
-                "\nAddress" + address +
                 "\ntype of hospital" + typeOfHospital;
     }
 
@@ -49,26 +45,20 @@ public class Hospital extends Organization {
         Hospital that = (Hospital) o;
         return super.equals(o)
                 && Objects.equals(hospitalType, that.hospitalType)
-                && Objects.equals(address, that.address)
                 && Objects.equals(typeOfHospital, that.typeOfHospital);
     }
 
     public int hashCode() {
-        return Objects.hash(super.hashCode(), hospitalType, address,  typeOfHospital);
+        return Objects.hash(super.hashCode(), hospitalType, typeOfHospital);
     }
 
     public static class Builder{
         private String hospitalType;
-        private String address;
         private HospitalType typeOfHospital;
 
 
     public Builder setHospitalType(String hospitalType){
         this.hospitalType = hospitalType;
-        return this;
-    }
-    public Builder setAddress(String address){
-        this.address = address;
         return this;
     }
     public Builder setTypeOfHospital(HospitalType typeOfHospital){
@@ -78,7 +68,6 @@ public class Hospital extends Organization {
 
     public Builder copy(Hospital hospital){
         this.hospitalType = hospital.hospitalType;
-        this.address = hospital.address;
         this.typeOfHospital = hospital.typeOfHospital;
         return this;
 

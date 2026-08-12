@@ -12,16 +12,14 @@ public class Pharmacy extends Organization {
     @Column(nullable = false)
     private String phamarcyType;
 
-    @Column(nullable = false)
-    private String address;
+
 
     public Pharmacy(){}
 
     @Override
     public String toString(){
         return super.toString() +
-                "Pharmarcy Type" +  phamarcyType +
-                "Address" + address;
+                "Pharmarcy Type" +  phamarcyType;
     }
 
     @Override
@@ -29,8 +27,7 @@ public class Pharmacy extends Organization {
         if (this == o) return true;
         if(!(o instanceof Pharmacy)) return false;
         return super.equals(o)
-                && Objects.equals(phamarcyType, ((Pharmacy)o).phamarcyType)
-                && Objects.equals(address, ((Pharmacy)o).address);
+                && Objects.equals(phamarcyType, ((Pharmacy)o).phamarcyType);
     }
 
     public static class Builder{
@@ -49,7 +46,6 @@ public class Pharmacy extends Organization {
 
         public Builder copy(Pharmacy pharmacy){
             this.pharmacyType = pharmacy.phamarcyType;
-            this.address = pharmacy.address;
             return this;
         }
 

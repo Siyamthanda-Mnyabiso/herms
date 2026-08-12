@@ -37,16 +37,26 @@ class BookingFactoryTest {
         sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);
 
-         bookingDate = sdf.parse("05/08/2026");
-         startDay = sdf.parse("07/08/2026");
-         endDay = sdf.parse("07/09/2026");
+        bookingDate = sdf.parse("13/08/2026");
+        startDay = sdf.parse("14/08/2026");
+        endDay = sdf.parse("07/09/2026");
     }
 
     @Test
     void createBooking() {
-        booking =  BookingFactory.createBooking(bookingDate,startDay,endDay, Helper.BookingStatus.CONFIRMED);
+        booking = BookingFactory.createBooking(
+                bookingDate,
+                startDay,
+                endDay,
+                Helper.BookingStatus.CONFIRMED
+        );
+
+        assertNotNull(booking);
+
         saved = bookingsRepository.save(booking);
+
         assertNotNull(saved.getBookingId());
+
         System.out.println(booking);
     }
 }

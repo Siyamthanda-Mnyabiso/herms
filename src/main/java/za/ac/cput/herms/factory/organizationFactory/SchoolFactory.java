@@ -1,21 +1,21 @@
 package za.ac.cput.herms.factory.organizationFactory;
 
+import za.ac.cput.herms.domain.Address;
 import za.ac.cput.herms.domain.organization.School;
 import za.ac.cput.herms.util.Helper;
 
 public class SchoolFactory {
 
-    public static School createSchoolFactory(String schoolType, String Address,
+    public static School createSchoolFactory(String schoolType, Address address,
                                              School.Type type, School.SchoolType typeOfSchool) {
-        if(Helper.isNullOrEmpty(schoolType) ||  Helper.isNullOrEmpty(Address)) {
+        if(Helper.isNullOrEmpty(schoolType) ||  address == null) {
             return null;
         }
 
-        if
+
 
         return new School.Builder()
                 .setSchoolType(schoolType)
-                .setAddress(Address)
                 .setType(type)
                 .setSchoolTypeOfSchool(typeOfSchool)
                 .build();

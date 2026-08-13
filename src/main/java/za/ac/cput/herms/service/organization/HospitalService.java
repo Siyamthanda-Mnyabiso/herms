@@ -2,8 +2,8 @@ package za.ac.cput.herms.service.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import za.ac.cput.herms.domain.organization.Hospital;
-import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.repository.organization.HospitalRepository;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class HospitalService implements IHospitalService{
     }
 
     @Override
-    public List<Pharmacy> Read(String organizationId) {
+    public Hospital Read(String organizationId) {
         return hospitalService.findHospitalById(organizationId);
     }
 

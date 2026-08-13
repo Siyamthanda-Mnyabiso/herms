@@ -2,7 +2,6 @@ package za.ac.cput.herms.service.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.domain.organization.School;
 import za.ac.cput.herms.repository.organization.SchoolRepository;
 
@@ -32,7 +31,7 @@ public class SchoolService implements ISchoolService {
     }
 
     @Override
-    public List<Pharmacy> Read(String organizationId) {
+    public School Read(String organizationId) {
         return schoolService.findByOrganizationId(organizationId);
     }
 

@@ -23,7 +23,7 @@ public class PharmacyController {
     }
 
     @GetMapping("/Read(organizationId)")
-    public List<Pharmacy> ReadPharmacy(@PathVariable String organizationId){
+    public Pharmacy ReadPharmacy(@PathVariable String organizationId){
         return pharmacyController.Read(organizationId);
     }
 

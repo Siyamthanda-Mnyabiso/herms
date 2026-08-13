@@ -2,6 +2,7 @@ package za.ac.cput.herms.service.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.ac.cput.herms.domain.Bookings;
 import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.repository.organization.PharmacyRepository;
 
@@ -32,7 +33,7 @@ public class PharmacyService  implements IPharmacyService {
     }
 
     @Override
-    public List<Pharmacy> Read(String organizationId) {
+    public Pharmacy Read(String organizationId) {
         return pharmacyService.findPharmacyById(organizationId);
     }
 

@@ -1,13 +1,14 @@
 package za.ac.cput.herms.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.herms.domain.organization.Hospital;
 import za.ac.cput.herms.util.Helper;
 
 import java.sql.Time;
 import java.util.Date;
 
 @Entity
-public class Bookings {
+public class Bookings extends Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;

@@ -11,12 +11,6 @@ public class SchoolFactory {
         if(Helper.isNullOrEmpty(schoolType) ||  address == null) {
             return null;
         }
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> bd536c064be2a0542a57088e23848df8f5f56e86
         return new School.Builder()
                 .setSchoolType(schoolType)
                 .setType(type)

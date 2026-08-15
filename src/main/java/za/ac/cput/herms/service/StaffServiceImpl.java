@@ -1,5 +1,5 @@
 
-package za.ac.cput.herms.service.impl;
+package za.ac.cput.herms.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

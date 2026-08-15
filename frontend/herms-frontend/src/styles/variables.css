@@ -1,0 +1,36 @@
+@theme {
+  --color-primary-50: #eaf7ef;
+  --color-primary-100: #d3f0dd;
+  --color-primary-500: #1f7a4d;
+  --color-primary-600: #196640;
+  --color-primary-700: #145233;
+
+  --color-accent-purple-50: #f4f0ff;
+  --color-accent-purple-500: #7c3aed;
+  --color-accent-purple-600: #6d28d9;
+
+  --color-accent-amber-400: #f5c451;
+  --color-accent-amber-500: #eeb52f;
+  --color-accent-amber-600: #d99f1e;
+
+  --color-sidebar: #16241d;
+  --color-sidebar-hover: #1f3327;
+  --color-sidebar-active: #24382c;
+  --color-sidebar-border: #2a3d31;
+  --color-sidebar-muted: #8ca396;
+
+  --color-status-pending: #d99f1e;
+  --color-status-pending-bg: #fdf3dc;
+  --color-status-accepted: #1f7a4d;
+  --color-status-accepted-bg: #e6f5ec;
+  --color-status-confirmed: #2563eb;
+  --color-status-confirmed-bg: #e8f0fe;
+  --color-status-completed: #6b7280;
+  --color-status-completed-bg: #f0f1f3;
+  --color-status-declined: #dc2626;
+  --color-status-declined-bg: #fdeaea;
+  --color-status-expired: #9ca3af;
+  --color-status-expired-bg: #f2f3f4;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}

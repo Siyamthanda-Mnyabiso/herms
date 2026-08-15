@@ -1,0 +1,122 @@
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
+import Button from "../../components/common/Button";
+import BookingCard from "../../components/cards/BookingCard";
+
+const STATS = [];
+
+const PENDING_REQUESTS = [];
+
+const UPCOMING_BOOKINGS = [];
+
+const AVAILABLE_DATES = [];
+
+export default function ProfessionalDashboard() {
+  const [available, setAvailable] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-xl font-bold text-gray-900">Welcome back</h1>
+        <p className="text-sm text-gray-500">Here's your professional overview.</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {STATS.map(({ icon: Icon, value, label }) => (
+          <div key={label} className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm">
+            <span className="flex size-10 items-center justify-center rounded-full bg-primary-50 text-primary-500">
+              <Icon className="size-5" />
+            </span>
+            <div>
+              <p className="text-lg font-bold text-gray-900">{value}</p>
+              <p className="text-xs text-gray-500">{label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <div className="rounded-2xl bg-white p-5 shadow-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-gray-900">Pending Requests</h2>
+              <button type="button" className="flex items-center gap-1 text-xs font-medium text-primary-500">
+                View all requests
+                <ArrowRight className="size-3.5" />
+              </button>
+            </div>
+            <div>
+              {PENDING_REQUESTS.map((request) => (
+                <div
+                  key={request.org}
+                  className="flex items-center justify-between gap-3 border-b border-gray-100 py-3 last:border-b-0"
+                >
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{request.org}</p>
+                    <p className="text-xs text-gray-500">{request.role}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">{request.dates}</p>
+                    <p className="text-xs font-medium text-status-pending">{request.left}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white p-5 shadow-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-gray-900">Upcoming Bookings</h2>
+              <button type="button" className="flex items-center gap-1 text-xs font-medium text-primary-500">
+                View all bookings
+                <ArrowRight className="size-3.5" />
+              </button>
+            </div>
+            <div>
+              {UPCOMING_BOOKINGS.map((booking) => (
+                <BookingCard key={booking.name} {...booking} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-semibold text-gray-900">Availability</h2>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-sm text-gray-600">You are available</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={available}
+              onClick={() => setAvailable((value) => !value)}
+              className={[
+                "relative h-6 w-11 rounded-full transition-colors",
+                available ? "bg-primary-500" : "bg-gray-200",
+              ].join(" ")}
+            >
+              <span
+                className={[
+                  "absolute top-0.5 size-5 rounded-full bg-white transition-transform",
+                  available ? "translate-x-5.5 left-0.5" : "left-0.5",
+                ].join(" ")}
+              />
+            </button>
+          </div>
+
+          <p className="mt-4 text-xs font-medium text-gray-400">Available Dates</p>
+          <div className="mt-2 flex flex-col gap-2">
+            {AVAILABLE_DATES.map((date) => (
+              <p key={date} className="text-sm text-gray-700">
+                {date}
+              </p>
+            ))}
+          </div>
+
+          <Button variant="amber" fullWidth className="mt-5">
+            Update Availability
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

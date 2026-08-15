@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "./variables.css";
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f7f8f9;
+}

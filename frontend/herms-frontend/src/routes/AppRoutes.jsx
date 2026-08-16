@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
+import Login from "../pages/auth/Login.jsx";
 import OrganizationLayout from "../layouts/OrganizationLayout";
 import OrganizationDashboard from "../pages/organization/OrganizationDashboard";
 import BrowseCandidates from "../pages/organization/BrowseCandidates";
@@ -13,7 +14,11 @@ import AdminUsers from "../pages/admin/AdminUsers";
 export default function AppRoutes() {
   return (
     <Routes>
+
       <Route path="/" element={<Home />} />
+
+        <Route path="/login" element={<Login/>} />
+
 
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />

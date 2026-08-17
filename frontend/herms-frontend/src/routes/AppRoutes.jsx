@@ -10,6 +10,7 @@ import BookingRequest from "../pages/bookings/BookingRequest";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+import Register from "../pages/auth/Register.jsx";
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,8 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
 
         <Route path="/login" element={<Login/>} />
+
+        <Route path="/register" element={<Register/>} />
 
 
       <Route path="/organization" element={<OrganizationLayout />}>

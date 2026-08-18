@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 function AuthHeader() {
     return(
-        <div className="grid grid-cols-2 w-full">
+        <div className="grid grid-cols-2 w-full gap-3">
             <Link to="/login">
                 <Button className="w-full bg-primary-500 text-white font-semibold py-2 rounded-l-lg" variant="primary" size="md">Login</Button>
             </Link>

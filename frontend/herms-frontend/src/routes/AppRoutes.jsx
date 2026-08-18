@@ -11,6 +11,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
 import Register from "../pages/auth/Register.jsx";
+import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
 
 export default function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ export default function AppRoutes() {
         <Route path="/login" element={<Login/>} />
 
         <Route path="/register" element={<Register/>} />
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
 
 
       <Route path="/organization" element={<OrganizationLayout />}>

@@ -2,17 +2,21 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import Button from "../../components/common/Button";
 import BookingCard from "../../components/cards/BookingCard";
+import { useUpcomingBookings } from "../../hooks/useBookings";
+import ErrorMessage from "../../components/common/ErrorMessage";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const STATS = [];
 
 const PENDING_REQUESTS = [];
 
-const UPCOMING_BOOKINGS = [];
+
 
 const AVAILABLE_DATES = [];
 
 export default function ProfessionalDashboard() {
   const [available, setAvailable] = useState(false);
+  const { bookings: UPCOMING_BOOKINGS, loading, error, refetch } = useUpcomingBookings();
 
   return (
     <div className="flex flex-col gap-6">
@@ -73,8 +77,10 @@ export default function ProfessionalDashboard() {
               </button>
             </div>
             <div>
-              {UPCOMING_BOOKINGS.map((booking) => (
-                <BookingCard key={booking.name} {...booking} />
+              {loading && <LoadingSpinner />}
+              {error && <ErrorMessage message={error} onRetry={refetch} />}
+              {!loading && !error && UPCOMING_BOOKINGS.map((booking) => (
+                  <BookingCard key={booking.name} {...booking} />
               ))}
             </div>
           </div>

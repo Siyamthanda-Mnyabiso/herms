@@ -8,6 +8,7 @@ import {
   UserPlus,
   Search,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navigation/Navbar";
 import Button from "../components/common/Button";
 import { CandidatePreviewCard } from "../components/cards/CandidateCard";
@@ -30,10 +31,11 @@ const HOW_IT_WORKS = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-
       <section className="grid grid-cols-1 gap-10 px-6 py-12 lg:grid-cols-2 lg:px-10 lg:py-16">
         <div className="flex flex-col justify-center gap-6">
           <h1 className="text-4xl font-bold leading-tight text-gray-900 lg:text-5xl">
@@ -45,10 +47,20 @@ export default function Home() {
             staffing, project work, and short-term needs.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button variant="primary" size="lg" icon={ArrowRight}>
+            <Button
+                variant="primary"
+                size="lg"
+                icon={ArrowRight}
+                onClick={() => navigate("/register/professional")}
+            >
               I'm a Professional
             </Button>
-            <Button variant="outline" size="lg" icon={ArrowRight}>
+            <Button
+                variant="outline"
+                size="lg"
+                icon={ArrowRight}
+                onClick={() => navigate("/register/organization")}
+            >
               I'm an Organization
             </Button>
           </div>

@@ -22,7 +22,7 @@ public class HospitalController {
         return hospitalController.Create(hospital);
     }
 
-    @GetMapping("/Read(organizationId)ead/v1/hospital")
+    @GetMapping("/Read{organizationId}ead/v1/hospital")
     public Hospital readHospital(@PathVariable String organizationId){
         return hospitalController.Read(organizationId);
     }
@@ -32,7 +32,7 @@ public class HospitalController {
         return hospitalController.Update(hospital);
     }
 
-    @DeleteMapping("/delete(organizationId)/v1/hospital")
+    @DeleteMapping("/delete{organizationId}/v1/hospital")
     public boolean deleteHospital(@PathVariable String organizationId){
         return hospitalController.Delete(organizationId);
     }
@@ -42,7 +42,7 @@ public class HospitalController {
         return hospitalController.getAll();
     }
 
-    @GetMapping("/getHospitalById(organizationId)/v1/hospital")
+    @GetMapping("/getByOrganisationId{organizationId}/v1/hospital")
     public Hospital findHospitalById(@PathVariable String organizationId){
         return hospitalController.getHospitalById(organizationId);
     }

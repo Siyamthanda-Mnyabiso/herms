@@ -24,7 +24,7 @@ public class PharmacyService  implements IPharmacyService {
 
     @Override
     public Pharmacy getPharmacyById(String organizationId) {
-        return pharmacyService.findPharmacyById(organizationId);
+        return pharmacyService.findPharmacyByOrganizationId(organizationId);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PharmacyService  implements IPharmacyService {
 
     @Override
     public Pharmacy Read(String organizationId) {
-        return pharmacyService.findPharmacyById(organizationId);
+        return pharmacyService.findPharmacyByOrganizationId(organizationId);
     }
 
     @Override

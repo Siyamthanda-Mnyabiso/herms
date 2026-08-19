@@ -6,7 +6,9 @@ import za.ac.cput.herms.domain.Bookings;
 import za.ac.cput.herms.service.IBookingService;
 
 import java.util.List;
+import java.util.Set;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/Bookings")
 public class BookingsController {

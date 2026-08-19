@@ -1,21 +1,31 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
+import Login from "../pages/auth/Login.jsx";
+import Register from "../pages/auth/Register.jsx";
+import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
+import NotFound from "../pages/NotFound";
+
 import OrganizationLayout from "../layouts/OrganizationLayout";
 import OrganizationDashboard from "../pages/organization/OrganizationDashboard";
 import BrowseCandidates from "../pages/organization/BrowseCandidates";
+
 import ProfessionalLayout from "../layouts/ProfessionalLayout";
 import ProfessionalDashboard from "../pages/professional/ProfessionalDashboard";
+
 import BookingRequest from "../pages/bookings/BookingRequest";
+
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
-import NotFound from "../pages/NotFound";
 
 export default function AppRoutes() {
   return (
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="*" element={<NotFound />} />
+    <Routes>
+      <Route path="/" element={<Home />} />
+
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />
@@ -31,6 +41,8 @@ export default function AppRoutes() {
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<AdminUsers />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

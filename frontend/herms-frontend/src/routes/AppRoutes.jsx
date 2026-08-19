@@ -9,11 +9,13 @@ import BookingRequest from "../pages/bookings/BookingRequest";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+import NotFound from "../pages/NotFound";
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
+      <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
 
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />

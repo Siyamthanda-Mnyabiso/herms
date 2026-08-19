@@ -24,7 +24,7 @@ public class HospitalService implements IHospitalService{
 
     @Override
     public Hospital Read(String organizationId) {
-        return hospitalService.findHospitalById(organizationId);
+        return hospitalService.findHospitalByOrganizationId(organizationId);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class HospitalService implements IHospitalService{
     @Override
     public Hospital getHospitalById(String organization){
 
-        return hospitalService.findHospitalById(organization);
+        return hospitalService.findHospitalByOrganizationId(organization);
     }
 
 }

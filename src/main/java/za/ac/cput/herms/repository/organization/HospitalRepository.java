@@ -10,6 +10,6 @@ public interface HospitalRepository extends JpaRepository<Hospital, String> {
 
     @Override
     List<Hospital> findAll();
-    Hospital findHospitalById(String organizationId);
+    Hospital findHospitalByOrganizationId(String organizationId);
 
 }

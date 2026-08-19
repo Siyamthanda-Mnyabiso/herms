@@ -1,6 +1,7 @@
 import { ChevronDown, Moon } from "lucide-react";
 import Button from "../common/Button";
 import hermsLogo from "../../assets/images/herms-logo.png";
+import { useNavigate } from "react-router-dom";
 
 const NAV_LINKS = [
   { label: "How It Works", href: "#how-it-works" },
@@ -11,6 +12,7 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
+    const navigate = useNavigate();
   return (
     <header className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 lg:px-10">
       <a href="/" className="flex items-center">
@@ -37,10 +39,10 @@ export default function Navbar() {
         >
           <Moon className="size-4" />
         </button>
-        <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={() => navigate("/login")}>
           Log in
         </Button>
-        <Button variant="primary" size="sm">
+        <Button variant="primary" size="sm" onClick={() => navigate("/register")}>
           Sign up
         </Button>
       </div>

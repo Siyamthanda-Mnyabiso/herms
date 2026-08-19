@@ -8,7 +8,7 @@ import java.sql.Time;
 import java.util.Date;
 
 @Entity
-public class Bookings extends Hospital {
+public class Bookings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;

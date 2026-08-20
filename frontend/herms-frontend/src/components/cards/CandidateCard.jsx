@@ -31,7 +31,7 @@ export function CandidatePreviewCard({ id, role, matchPercent, rating, availabil
 
 export default function CandidateCard({
   id,
-  qualifications,
+  profession_number,
   skills,
   availability,
   location,
@@ -47,9 +47,9 @@ export default function CandidateCard({
           <p className="text-sm font-semibold text-gray-900">{id}</p>
           <div className="mt-1 grid grid-cols-1 gap-x-8 gap-y-1 text-xs text-gray-500 sm:grid-cols-3">
             <span>
-              <span className="text-gray-400">Qualifications</span>
+              <span className="text-gray-400">Profession number </span>
               <br />
-              {qualifications}
+              {profession_number}
             </span>
             <span>
               <span className="text-gray-400">Skills</span>

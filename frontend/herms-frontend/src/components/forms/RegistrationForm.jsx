@@ -8,7 +8,9 @@ import {useState} from "react";
 import AccountType from "./AccountType.jsx";
 
 function Registration(){
+
     const [selectedRole, setSelectedRole] = useState("");
+
     return(
     <div className="registration-form">
         <AuthHeader /><br />
@@ -21,7 +23,6 @@ function Registration(){
                 onChange={(ev) => setSelectedRole(ev.target.value)}
                 options={[
                     {value:"--select role--", label:"-- Select Role --"},
-                    {value:"organization", label:"Organization"},
                     {value:"teacher",label:"Teacher"},
                     {value:"doctor",label:"Doctor"},
                     {value:"nurse",label:"Nurse"},

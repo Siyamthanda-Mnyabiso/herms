@@ -1,5 +1,5 @@
 import hermsLogo from "../../assets/images/herms-logo.png";
-;
+
 import AccountType from "../../components/forms/AccountType.jsx";
 
 function Account() {
@@ -12,7 +12,7 @@ function Account() {
                 <AccountType />
             </div>
             <label className="text-center text-gray-500 text-sm">
-                <a href="/" className="text-center size-sm text-gray-500 italic hover:text-green-700"> ← Back to home</a>
+                <a href="/login" className="text-center size-sm text-gray-500 italic hover:text-green-700"> ← Back </a>
             </label>
         </div>
     )

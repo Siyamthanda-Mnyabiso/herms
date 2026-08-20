@@ -5,6 +5,7 @@ import hermsLogo from "../../assets/images/herms-logo.png";
 import Button from "../../components/common/Button.jsx";
 import {Link} from "react-router-dom";
 
+
 function Register(){
     return(
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 pt-24 gap-4">
@@ -12,6 +13,7 @@ function Register(){
                 <img src={hermsLogo} alt="HERMS" className="w-50" />
             </a>
             <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+
                 <RegistrationForm /><br />
 
                 <div className="text-center mt-4 text-sm text-gray-600">

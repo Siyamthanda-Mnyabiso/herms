@@ -17,6 +17,8 @@ import BookingRequest from "../pages/bookings/BookingRequest";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+import AccountType from "../components/forms/AccountType.jsx";
+import Account from "../pages/auth/Account.jsx";
 
 export default function AppRoutes() {
   return (
@@ -26,6 +28,7 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/account" element={<Account/>} />
 
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />

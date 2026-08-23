@@ -13,7 +13,7 @@ import za.ac.cput.herms.service.IStaffService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/herms/staff")
+@RequestMapping("/staff")
 public class StaffController {
 
     private final IStaffService staffService;

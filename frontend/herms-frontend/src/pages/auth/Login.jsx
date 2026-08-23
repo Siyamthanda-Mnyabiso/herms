@@ -8,6 +8,9 @@ function Login() {
             <a href="/" className="flex items-center">
                 <img src={hermsLogo} alt="HERMS" className="w-50" />
             </a>
+            <label className=" flex flex-col items-center text-green-950 text-xl font-bold">
+                Welcome Back !
+            </label>
             <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
                 <LoginForm />
             </div>

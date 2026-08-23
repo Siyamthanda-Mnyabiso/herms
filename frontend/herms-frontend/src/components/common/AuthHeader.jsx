@@ -7,7 +7,7 @@ function AuthHeader() {
             <Link to="/login">
                 <Button className="w-full bg-primary-500 text-white font-semibold py-2 rounded-l-lg" variant="primary" size="md">Login</Button>
             </Link>
-            <Link to="/register">
+            <Link to="/account">
                 <Button className="w-full bg-white text-gray-800 border border-gray-200 font-semibold py-2 rounded-r-lg" variant="secondary" size="md">Register</Button>
             </Link>
 

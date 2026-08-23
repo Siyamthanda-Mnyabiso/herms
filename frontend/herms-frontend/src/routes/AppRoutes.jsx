@@ -16,6 +16,10 @@ import ProfessionalDashboard from "../pages/professional/ProfessionalDashboard";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+import AccountType from "../components/forms/AccountType.jsx";
+import Account from "../pages/auth/Account.jsx";
+import OrganizationRegistration from "../pages/auth/OrganizationRegistration.jsx";
+import ResetPassword from "../pages/auth/ResetPassword.jsx";
 
 import BookingRequest from "../pages/bookings/BookingRequest";
 import PendingBookings from "../pages/bookings/PendingBookings";
@@ -33,6 +37,10 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/account" element={<Account/>} />
+        <Route path="/organization-registration" element={<OrganizationRegistration/>} />
+        <Route path="/reset-password" element={<ResetPassword/>} />
+        <Route path="/forgot-password/reset-password" element={<ResetPassword />} />
 
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />

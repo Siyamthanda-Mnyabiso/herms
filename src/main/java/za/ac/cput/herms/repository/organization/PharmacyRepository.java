@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface PharmacyRepository extends JpaRepository<Pharmacy, String> {
     List<Pharmacy> findAll();
-    Pharmacy findPharmacyById(String organizationId);
+    Pharmacy findPharmacyByOrganizationId(String organizationId);
 }

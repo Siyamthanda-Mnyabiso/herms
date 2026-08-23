@@ -1,6 +1,7 @@
 import { ChevronDown, Moon } from "lucide-react";
 import Button from "../common/Button";
 import hermsLogo from "../../assets/images/herms-logo.png";
+import { Link } from "react-router-dom";
 
 const NAV_LINKS = [
   { label: "How It Works", href: "#how-it-works" },
@@ -19,11 +20,19 @@ export default function Navbar() {
 
       <nav className="hidden items-center gap-8 text-sm font-medium text-gray-600 lg:flex">
         {NAV_LINKS.map((link) => (
-          <a key={link.label} href={link.href} className="hover:text-gray-900">
+          <a
+            key={link.label}
+            href={link.href}
+            className="hover:text-gray-900"
+          >
             {link.label}
           </a>
         ))}
-        <button type="button" className="flex items-center gap-1 hover:text-gray-900">
+
+        <button
+          type="button"
+          className="flex items-center gap-1 hover:text-gray-900"
+        >
           Resources
           <ChevronDown className="size-4" />
         </button>
@@ -37,12 +46,12 @@ export default function Navbar() {
         >
           <Moon className="size-4" />
         </button>
-        <Button variant="secondary" size="sm">
-          Log in
-        </Button>
-        <Button variant="primary" size="sm">
-          Sign up
-        </Button>
+
+        <Link to="/login">
+          <Button variant="secondary" size="sm">
+            Log in
+          </Button>
+        </Link>
       </div>
     </header>
   );

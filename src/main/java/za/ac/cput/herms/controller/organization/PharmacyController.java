@@ -8,7 +8,7 @@ import za.ac.cput.herms.service.organization.IPharmacyService;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/v1/pharmacy")
 public class PharmacyController {
     public final IPharmacyService pharmacyController;
 
@@ -22,7 +22,7 @@ public class PharmacyController {
         return pharmacyController.Create(pharmacy);
     }
 
-    @GetMapping("/Read(organizationId)")
+    @GetMapping("/Read{organizationId}")
     public Pharmacy ReadPharmacy(@PathVariable String organizationId){
         return pharmacyController.Read(organizationId);
     }
@@ -32,7 +32,7 @@ public class PharmacyController {
         pharmacyController.Update(pharmacy);
     }
 
-    @DeleteMapping("/delete(organizationId)")
+    @DeleteMapping("/delete{organizationId}")
     public void deletePharmacy(@PathVariable String organizationId){
         pharmacyController.Delete(organizationId);
     }
@@ -42,8 +42,8 @@ public class PharmacyController {
         return pharmacyController.getAll();
     }
 
-    @GetMapping("/getPharmacyById")
-    public Pharmacy getPharmacyById(@PathVariable String organizationId){
+    @GetMapping("/read/{organizationId}")
+    public Pharmacy readPharmacy(@PathVariable String organizationId){
         return pharmacyController.getPharmacyById(organizationId);
     }
 }

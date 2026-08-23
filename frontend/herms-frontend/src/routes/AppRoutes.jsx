@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+
 import Home from "../pages/Home";
 import Login from "../pages/auth/Login.jsx";
 import Register from "../pages/auth/Register.jsx";
@@ -12,11 +13,17 @@ import BrowseCandidates from "../pages/organization/BrowseCandidates";
 import ProfessionalLayout from "../layouts/ProfessionalLayout";
 import ProfessionalDashboard from "../pages/professional/ProfessionalDashboard";
 
-import BookingRequest from "../pages/bookings/BookingRequest";
-
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+
+import BookingRequest from "../pages/bookings/BookingRequest";
+import PendingBookings from "../pages/bookings/PendingBookings";
+import AcceptedBookings from "../pages/bookings/AcceptedBookings";
+import DeclinedBookings from "../pages/bookings/DeclinedBookings";
+import ExpiredBookings from "../pages/bookings/ExpiredBookings";
+import ConfirmedBookings from "../pages/bookings/ConfirmedBookings";
+import BookingHistory from "../pages/bookings/BookingHistory";
 
 export default function AppRoutes() {
   return (
@@ -30,11 +37,19 @@ export default function AppRoutes() {
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />
         <Route path="browse" element={<BrowseCandidates />} />
+        <Route path="bookings" element={<PendingBookings />} />
+        <Route path="bookings/accepted" element={<AcceptedBookings />} />
+        <Route path="bookings/declined" element={<DeclinedBookings />} />
+        <Route path="bookings/expired" element={<ExpiredBookings />} />
+        <Route path="bookings/confirmed" element={<ConfirmedBookings />} />
+        <Route path="bookings/history" element={<BookingHistory />} />
       </Route>
 
       <Route path="/professional" element={<ProfessionalLayout />}>
         <Route index element={<ProfessionalDashboard />} />
         <Route path="requests" element={<BookingRequest />} />
+        <Route path="bookings" element={<AcceptedBookings />} />
+        <Route path="bookings/history" element={<BookingHistory />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

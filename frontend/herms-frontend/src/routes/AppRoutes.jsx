@@ -10,6 +10,8 @@ import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
 import NotFound from "../pages/NotFound";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
 
 export default function AppRoutes() {
   return (
@@ -31,6 +33,8 @@ export default function AppRoutes() {
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<AdminUsers />} />
       </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
     </Routes>
   );
 }

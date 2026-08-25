@@ -1,5 +1,6 @@
 package za.ac.cput.herms.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public abstract class Person {
     protected ContactDetails contactDetails;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Bookings> bookings = new ArrayList<>();
 
     public Person(){}

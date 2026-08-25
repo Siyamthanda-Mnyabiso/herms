@@ -1,66 +1,63 @@
-import { useState } from "react";
-import { Lightbulb } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Lightbulb, User, Clock, AlertTriangle } from "lucide-react";
 import Button from "../../components/common/Button";
-import LoadingSpinner from "../../components/common/LoadingSpinner";
-import ErrorMessage from "../../components/common/ErrorMessage";
-import { useAllBookings } from "../../hooks/useBookings";
-import { updateBookingStatus } from "../../services/bookingService";
-import { useNotification } from "../../context/NotificationContext";
+import StatusBadge from "../../components/common/StatusBadge";
+import ConfirmModal from "../../components/modals/ConfirmModal";
+import { mockBookings, BOOKING_STATUS } from "./data/mockBookings";
+import {
+    formatDateRange,
+    getResponseCountdown,
+    isUrgent,
+} from "./utils/bookingHelpers";
 
-function formatDateRange(start, end) {
-    const format = (d) => new Date(d).toLocaleDateString("en-ZA", { day: "numeric", month: "short" });
-    return `${format(start)} – ${format(end)}`;
-}
+const TABS = [
+    { key: "all", label: "All Requests" },
+    { key: BOOKING_STATUS.PENDING, label: "Pending" },
+    { key: BOOKING_STATUS.ACCEPTED, label: "Accepted" },
+    { key: BOOKING_STATUS.DECLINED, label: "Declined" },
+    { key: BOOKING_STATUS.EXPIRED, label: "Expired" },
+];
 
 export default function BookingRequest() {
+    const [bookings, setBookings] = useState(mockBookings);
     const [activeTab, setActiveTab] = useState("all");
-    const { bookings, loading, error, refetch } = useAllBookings();
-    const { notify } = useNotification();
+    const [declineTarget, setDeclineTarget] = useState(null);
 
-    const handleUpdateStatus = async (rawBooking, newStatus) => {
-        try {
-            await updateBookingStatus(rawBooking, newStatus);
-            notify(newStatus === "CONFIRMED" ? "Booking accepted" : "Booking declined", "success");
-            refetch();
-        } catch (err) {
-            console.error("Failed to update booking", err);
-            notify("Couldn't update the request. Please try again.", "error");
+    const counts = useMemo(() => {
+        const base = { all: bookings.length };
+        for (const tab of TABS.slice(1)) {
+            base[tab.key] = bookings.filter((b) => b.status === tab.key).length;
         }
-    };
+        return base;
+    }, [bookings]);
 
-    const mapped = bookings.map((b) => ({
-        id: b.bookingId,
-        org: b.person
-            ? `${b.person.name?.firstName ?? ""} ${b.person.name?.lastName ?? ""}`.trim()
-            : `Booking #${b.bookingId}`,
-        role: b.person?.specialization ?? "—",
-        dates: formatDateRange(b.startDay, b.endDay),
-        duration: "—",
-        rate: "—",
-        requested: b.bookingDate
-            ? new Date(b.bookingDate).toLocaleDateString("en-ZA")
-            : "—",
-        timeLeft: "24h left",
-        status: b.status,
-    }));
+    const visible = bookings.filter((b) => activeTab === "all" || b.status === activeTab);
 
-    const filterByTab = {
-        all: mapped,
-        pending: mapped.filter((r) => r.status === "PENDING"),
-        accepted: mapped.filter((r) => r.status === "CONFIRMED"),
-        declined: mapped.filter((r) => r.status === "CANCELED"),
-        expired: mapped.filter((r) => r.status === "COMPLETED"), // adjust if you add a real "expired" concept later
-    };
+    function handleAccept(booking) {
+        setBookings((prev) =>
+            prev.map((b) =>
+                b.id === booking.id
+                    ? { ...b, status: BOOKING_STATUS.ACCEPTED, acceptedAt: new Date().toISOString() }
+                    : b
+            )
+        );
+    }
 
-    const TABS = [
-        { key: "all", label: "All Requests", count: filterByTab.all.length },
-        { key: "pending", label: "Pending", count: filterByTab.pending.length },
-        { key: "accepted", label: "Accepted", count: filterByTab.accepted.length },
-        { key: "declined", label: "Declined", count: filterByTab.declined.length },
-        { key: "expired", label: "Expired", count: filterByTab.expired.length },
-    ];
-
-    const visibleRequests = filterByTab[activeTab];
+    function handleDeclineConfirm(reason) {
+        setBookings((prev) =>
+            prev.map((b) =>
+                b.id === declineTarget.id
+                    ? {
+                        ...b,
+                        status: BOOKING_STATUS.DECLINED,
+                        declinedAt: new Date().toISOString(),
+                        declineReason: reason || b.declineReason,
+                    }
+                    : b
+            )
+        );
+        setDeclineTarget(null);
+    }
 
     return (
         <div className="flex flex-col gap-6">
@@ -79,83 +76,112 @@ export default function BookingRequest() {
                                 : "text-gray-500 hover:bg-gray-50",
                         ].join(" ")}
                     >
-                        {tab.label} ({tab.count})
+                        {tab.label} ({counts[tab.key] ?? 0})
                     </button>
                 ))}
             </div>
 
-            {loading && <LoadingSpinner />}
-            {error && <ErrorMessage message={error} onRetry={refetch} />}
+            <div className="flex flex-col gap-4">
+                {visible.map((booking) => {
+                    const countdown = booking.respondBy ? getResponseCountdown(booking) : null;
+                    const urgent = booking.respondBy ? isUrgent(booking) : false;
 
-            {!loading && !error && (
-                <div className="flex flex-col gap-4">
-                    {visibleRequests.length === 0 && (
-                        <p className="text-sm text-gray-400">No requests in this category.</p>
-                    )}
-
-                    {visibleRequests.map((request) => {
-                        const rawBooking = bookings.find((b) => b.bookingId === request.id);
-
-                        return (
-                            <div key={request.id} className="rounded-2xl bg-white p-5 shadow-sm">
-                                <div className="flex items-center justify-between">
+                    return (
+                        <div key={booking.id} className="rounded-2xl bg-white p-5 shadow-sm">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                    <User className="size-4" />
+                  </span>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-900">{request.org}</p>
-                                        <p className="text-xs text-gray-500">{request.role}</p>
-                                    </div>
-                                    <span className="text-xs font-medium text-status-declined">{request.timeLeft}</span>
-                                </div>
-
-                                <div className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
-                                    <div>
-                                        <p className="text-xs text-gray-400">Dates</p>
-                                        <p className="text-gray-700">{request.dates}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-400">Duration</p>
-                                        <p className="text-gray-700">{request.duration}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-400">Rate</p>
-                                        <p className="text-gray-700">{request.rate}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-400">Requested</p>
-                                        <p className="text-gray-700">{request.requested}</p>
+                                        <p className="text-sm font-semibold text-gray-900">{booking.organization}</p>
+                                        <p className="text-xs text-gray-500">{booking.role}</p>
                                     </div>
                                 </div>
-
-                                {request.status === "PENDING" && (
-                                    <div className="mt-4 flex gap-3">
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            onClick={() => handleUpdateStatus(rawBooking, "CANCELED")}
-                                        >
-                                            Decline
-                                        </Button>
-                                        <Button
-                                            variant="amber"
-                                            size="sm"
-                                            onClick={() => handleUpdateStatus(rawBooking, "CONFIRMED")}
-                                        >
-                                            Accept
-                                        </Button>
-                                    </div>
-                                )}
+                                <StatusBadge status={booking.status} />
                             </div>
-                        );
-                    })}
-                </div>
-            )}
+
+                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
+                                <div>
+                                    <p className="text-xs text-gray-400">Dates</p>
+                                    <p className="text-gray-700">
+                                        {formatDateRange(booking.startDate, booking.endDate)}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-400">Duration</p>
+                                    <p className="text-gray-700">{booking.duration}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-400">Rate</p>
+                                    <p className="text-gray-700">{booking.rate}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-400">Requested</p>
+                                    <p className="text-gray-700">
+                                        {new Date(booking.requestedAt).toLocaleDateString("en-ZA", {
+                                            month: "short",
+                                            day: "numeric",
+                                        })}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {booking.declineReason && (
+                                <p className="mt-3 text-xs text-gray-500">
+                                    <span className="font-medium text-gray-600">Reason:</span>{" "}
+                                    {booking.declineReason}
+                                </p>
+                            )}
+
+                            {countdown && (
+                                <div
+                                    className={[
+                                        "mt-3 flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
+                                        urgent
+                                            ? "bg-status-declined-bg text-status-declined"
+                                            : "bg-status-pending-bg text-status-pending",
+                                    ].join(" ")}
+                                >
+                                    {urgent ? <AlertTriangle className="size-3.5" /> : <Clock className="size-3.5" />}
+                                    {countdown.label}
+                                </div>
+                            )}
+
+                            {booking.status === BOOKING_STATUS.PENDING && (
+                                <div className="mt-4 flex gap-3">
+                                    <Button variant="secondary" size="sm" onClick={() => setDeclineTarget(booking)}>
+                                        Decline
+                                    </Button>
+                                    <Button variant="amber" size="sm" onClick={() => handleAccept(booking)}>
+                                        Accept
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
 
             <div className="flex items-start gap-3 rounded-2xl bg-primary-50 p-4 text-sm text-primary-700">
                 <Lightbulb className="mt-0.5 size-4 shrink-0" />
                 <p>
-                    <span className="font-medium">Tip:</span> You have 24 hours to respond to booking requests.
-                    If you don't respond, the request will expire and move to the next candidate.
+                    <span className="font-medium">Tip:</span> You have 24 hours to respond to booking
+                    requests. If you don't respond, the request will expire and move to the next
+                    candidate.
                 </p>
             </div>
+
+            <ConfirmModal
+                open={!!declineTarget}
+                title="Decline this request?"
+                description="The organization will be notified and the request will move to the next candidate."
+                confirmLabel="Decline Request"
+                requireReason
+                reasonLabel="Reason (shown to the organization)"
+                onConfirm={handleDeclineConfirm}
+                onClose={() => setDeclineTarget(null)}
+            />
         </div>
     );
 }

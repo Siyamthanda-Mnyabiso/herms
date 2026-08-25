@@ -1,9 +1,24 @@
-import LoginForm from "../../components/forms/LoginForm";
+import LoginForm from "../../components/forms/LoginForm.jsx";
+import hermsLogo from "../../assets/images/herms-logo.png";
 
-export default function Login() {
-    return (
-        <div className="flex min-h-screen items-center justify-center bg-white p-6">
-            <LoginForm />
+
+function Login() {
+    return(
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 pt-24 gap-3">
+            <a href="/" className="flex items-center">
+                <img src={hermsLogo} alt="HERMS" className="w-50" />
+            </a>
+            <label className=" flex flex-col items-center text-green-950 text-xl font-bold">
+                Welcome Back !
+            </label>
+            <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+                <LoginForm />
+            </div>
+            <label className="text-center text-gray-500 text-sm">
+                <a href="/" className="text-center size-sm text-gray-500 italic hover:text-green-700"> ← Back to home</a>
+            </label>
         </div>
-    );
+    )
+
 }
+export default Login;

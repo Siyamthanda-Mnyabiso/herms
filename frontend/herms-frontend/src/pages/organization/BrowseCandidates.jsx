@@ -8,6 +8,7 @@ import CandidateCard from "../../components/cards/CandidateCard";
 import { getProfessionalsByType } from "../../services/staffService";
 import { createBooking } from "../../services/bookingService";
 import { useNotification } from "../../context/NotificationContext";
+import { useShortlist } from "../../context/ShortlistContext";
 
 const PROFESSION_KEYWORDS = ["nurse", "doctor", "teacher", "pharmacist"];
 
@@ -34,58 +35,92 @@ export default function BrowseCandidates() {
     const [availability, setAvailability] = useState("all");
     const [selectedCandidate, setSelectedCandidate] = useState(null); // NEW
     const { notify } = useNotification();
+    const { isShortlisted, toggleShortlist } = useShortlist();
+
 
     const searchMatchedProfession = PROFESSION_KEYWORDS.find(
         (p) => p === searchTerm.trim().toLowerCase()
     );
     const activeProfession = searchMatchedProfession || profession;
 
+    function mapPeople(data, professionType) {
+        return data.map((person) => ({
+            id: person.personId,
+            name: `Candidate #${String(person.personId).padStart(3, "0")}`,
+            profession_number: person.licenseNo ?? "—",
+            qualification: person.qualification ?? "—",
+            skills: person.specialization ?? "—",
+            availabilityStatus: person.availabilityStatus ?? "NOT_AVAILABLE",
+            availability:
+                person.availabilityStatus === "AVAILABLE" ? "Available" : "Not Available",
+            dates: "—",
+            location: person.address?.city ?? "—",
+            province: person.address?.province ?? "—",
+            experience: person.yearsOfExperience
+                ? `${person.yearsOfExperience} years`
+                : "—",
+            profession: professionType,
+        }));
+    }
+
+    function handleError(err) {
+        console.error("Failed to load professionals:", err);
+    }
     useEffect(() => {
-        if (!activeProfession || activeProfession === "all") {
-            setCandidates([]);
+        const term = searchTerm.trim().toLowerCase();
+        const isProfessionSearch = PROFESSION_KEYWORDS.includes(term);
+
+        if (isProfessionSearch) {
+            setLoading(true);
+            getProfessionalsByType(term)
+                .then(mapAndSet)
+                .catch(handleError)
+                .finally(() => setLoading(false));
             return;
         }
 
+        const shouldSearchAll =
+            term.length > 0 || location !== "all" || availability !== "all";
+
         setLoading(true);
-        getProfessionalsByType(activeProfession)
-            .then((data) => {
-                const mapped = data.map((person) => ({
-                    id: person.personId,
-                    name: `Candidate #${String(person.personId).padStart(3, "0")}`,
-                    profession_number: person.licenseNo ?? "—",
-                    qualification: person.qualification ?? "—",
-                    skills: person.specialization ?? "—",
-                    availabilityStatus: person.availabilityStatus ?? "NOT_AVAILABLE",
-                    availability:
-                        person.availabilityStatus === "AVAILABLE"
-                            ? "Available"
-                            : "Not Available",
-                    dates: "—",
-                    location: person.address?.city ?? "—",
-                    province: person.address?.province ?? "—",
-                    experience: person.yearsOfExperience
-                        ? `${person.yearsOfExperience} years`
-                        : "—",
-                    profession: activeProfession,
-                }));
-                setCandidates(mapped);
-            })
-            .catch((err) => {
-                console.error("Failed to load professionals:", err);
-                setCandidates([]);
-            })
-            .finally(() => setLoading(false));
-    }, [activeProfession]);
+
+        if (shouldSearchAll) {
+            Promise.all([
+                getProfessionalsByType("nurse"),
+                getProfessionalsByType("doctor"),
+                getProfessionalsByType("teacher"),
+                getProfessionalsByType("pharmacist"),
+            ])
+                .then(([nurses, doctors, teachers, pharmacists]) => {
+                    const all = [
+                        ...mapPeople(nurses, "nurse"),
+                        ...mapPeople(doctors, "doctor"),
+                        ...mapPeople(teachers, "teacher"),
+                        ...mapPeople(pharmacists, "pharmacist"),
+                    ];
+                    setCandidates(all);
+                })
+                .catch(handleError)
+                .finally(() => setLoading(false));
+        } else {
+            getProfessionalsByType(profession)
+                .then((data) => {
+                    setCandidates(mapPeople(data, profession));
+                })
+                .catch(handleError)
+                .finally(() => setLoading(false));
+        }
+    }, [profession, searchTerm, location, availability]);
+
 
     const filteredCandidates = candidates.filter((c) => {
         const term = searchTerm.trim().toLowerCase();
 
         const matchesSearch =
             !term ||
-            searchMatchedProfession ||
-            c.qualification.toLowerCase().includes(term) ||
-            c.skills.toLowerCase().includes(term) ||
-            c.name.toLowerCase().includes(term);
+            !!searchMatchedProfession ||
+            [c.skills, c.qualification, c.name, c.profession_number,c.location]
+                .some((field) => field?.toLowerCase().includes(term));
 
         const matchesLocation =
             location === "all" || c.province === location;
@@ -199,7 +234,17 @@ export default function BrowseCandidates() {
                         <CandidateCard
                             key={candidate.id}
                             {...candidate}
-                            onViewDetails={() => setSelectedCandidate(candidate)} // NEW
+                            onViewDetails={() => setSelectedCandidate(candidate)}
+                            isShortlisted={isShortlisted(candidate.id)}
+                            onToggleShortlist={() => {
+                                toggleShortlist(candidate);
+                                notify(
+                                    isShortlisted(candidate.id)
+                                        ? "Removed from shortlist"
+                                        : "Added to shortlist",
+                                    "success"
+                                );
+                            }}
                         />
                     ))}
                 </div>

@@ -36,8 +36,12 @@ export default function CandidateCard({
   availability,
   location,
   onViewDetails,
+    isShortlisted,
+    onToggleShortlist,
+    ...rest
 }) {
   return (
+      <div className="...">
     <div className="flex flex-col gap-4 border-b border-gray-100 py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-start gap-3">
         <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400">
@@ -70,12 +74,20 @@ export default function CandidateCard({
           View Details
         </Button>
         <button
-          type="button"
-          className="flex size-9 items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50"
+            type="button"
+            onClick={onToggleShortlist}
+            className={[
+              "flex size-9 items-center justify-center rounded-lg border hover:bg-gray-50",
+              isShortlisted
+                  ? "border-primary-500 bg-primary-50 text-primary-600"
+                  : "border-gray-200 text-gray-400",
+            ].join(" ")}
         >
-          <Bookmark className="size-4" />
+          <Bookmark className={isShortlisted ? "size-4 fill-current" : "size-4"} />
         </button>
       </div>
     </div>
+      </div>
   );
 }
+

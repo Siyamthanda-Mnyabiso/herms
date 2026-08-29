@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import SearchBar from "../../components/common/SearchBar";
 import Select from "../../components/common/Select";
 import Button from "../../components/common/Button";
 import Pagination from "../../components/common/Pagination";
 import CandidateCard from "../../components/cards/CandidateCard";
 import { getProfessionalsByType } from "../../services/staffService";
+import { createBooking } from "../../services/bookingService";
+import { useNotification } from "../../context/NotificationContext";
+import { useShortlist } from "../../context/ShortlistContext";
 
 const PROFESSION_KEYWORDS = ["nurse", "doctor", "teacher", "pharmacist"];
 
@@ -30,56 +33,94 @@ export default function BrowseCandidates() {
     const [searchTerm, setSearchTerm] = useState("");
     const [location, setLocation] = useState("all");
     const [availability, setAvailability] = useState("all");
+    const [selectedCandidate, setSelectedCandidate] = useState(null); // NEW
+    const { notify } = useNotification();
+    const { isShortlisted, toggleShortlist } = useShortlist();
+
 
     const searchMatchedProfession = PROFESSION_KEYWORDS.find(
         (p) => p === searchTerm.trim().toLowerCase()
     );
     const activeProfession = searchMatchedProfession || profession;
 
+    function mapPeople(data, professionType) {
+        return data.map((person) => ({
+            id: person.personId,
+            name: `Candidate #${String(person.personId).padStart(3, "0")}`,
+            profession_number: person.licenseNo ?? "—",
+            qualification: person.qualification ?? "—",
+            skills: person.specialization ?? "—",
+            availabilityStatus: person.availabilityStatus ?? "NOT_AVAILABLE",
+            availability:
+                person.availabilityStatus === "AVAILABLE" ? "Available" : "Not Available",
+            dates: "—",
+            location: person.address?.city ?? "—",
+            province: person.address?.province ?? "—",
+            experience: person.yearsOfExperience
+                ? `${person.yearsOfExperience} years`
+                : "—",
+            profession: professionType,
+        }));
+    }
+
+    function handleError(err) {
+        console.error("Failed to load professionals:", err);
+    }
     useEffect(() => {
-        if (!activeProfession || activeProfession === "all") {
-            setCandidates([]);
+        const term = searchTerm.trim().toLowerCase();
+        const isProfessionSearch = PROFESSION_KEYWORDS.includes(term);
+
+        if (isProfessionSearch) {
+            setLoading(true);
+            getProfessionalsByType(term)
+                .then(mapAndSet)
+                .catch(handleError)
+                .finally(() => setLoading(false));
             return;
         }
 
+        const shouldSearchAll =
+            term.length > 0 || location !== "all" || availability !== "all";
+
         setLoading(true);
-        getProfessionalsByType(activeProfession)
-            .then((data) => {
-                const mapped = data.map((person) => ({
-                    id: person.personId,
-                    name: `Candidate #${String(person.personId).padStart(3, "0")}`,
-                    qualification: person.qualification ?? "—",
-                    skills: person.specialization ?? "—",
-                    availabilityStatus: person.availabilityStatus ?? "NOT_AVAILABLE",
-                    availability:
-                        person.availabilityStatus === "AVAILABLE"
-                            ? "Available"
-                            : "Not Available",
-                    dates: "—",
-                    location: person.address?.city ?? "—",
-                    province: person.address?.province ?? "—",
-                    experience: person.yearsOfExperience
-                        ? `${person.yearsOfExperience} years`
-                        : "—",
-                }));
-                setCandidates(mapped);
-            })
-            .catch((err) => {
-                console.error("Failed to load professionals:", err);
-                setCandidates([]);
-            })
-            .finally(() => setLoading(false));
-    }, [activeProfession]);
+
+        if (shouldSearchAll) {
+            Promise.all([
+                getProfessionalsByType("nurse"),
+                getProfessionalsByType("doctor"),
+                getProfessionalsByType("teacher"),
+                getProfessionalsByType("pharmacist"),
+            ])
+                .then(([nurses, doctors, teachers, pharmacists]) => {
+                    const all = [
+                        ...mapPeople(nurses, "nurse"),
+                        ...mapPeople(doctors, "doctor"),
+                        ...mapPeople(teachers, "teacher"),
+                        ...mapPeople(pharmacists, "pharmacist"),
+                    ];
+                    setCandidates(all);
+                })
+                .catch(handleError)
+                .finally(() => setLoading(false));
+        } else {
+            getProfessionalsByType(profession)
+                .then((data) => {
+                    setCandidates(mapPeople(data, profession));
+                })
+                .catch(handleError)
+                .finally(() => setLoading(false));
+        }
+    }, [profession, searchTerm, location, availability]);
+
 
     const filteredCandidates = candidates.filter((c) => {
         const term = searchTerm.trim().toLowerCase();
 
         const matchesSearch =
             !term ||
-            searchMatchedProfession ||
-            c.qualification.toLowerCase().includes(term) ||
-            c.skills.toLowerCase().includes(term) ||
-            c.name.toLowerCase().includes(term);
+            !!searchMatchedProfession ||
+            [c.skills, c.qualification, c.name, c.profession_number,c.location]
+                .some((field) => field?.toLowerCase().includes(term));
 
         const matchesLocation =
             location === "all" || c.province === location;
@@ -190,12 +231,124 @@ export default function BrowseCandidates() {
                     )}
 
                     {filteredCandidates.map((candidate) => (
-                        <CandidateCard key={candidate.id} {...candidate} />
+                        <CandidateCard
+                            key={candidate.id}
+                            {...candidate}
+                            onViewDetails={() => setSelectedCandidate(candidate)}
+                            isShortlisted={isShortlisted(candidate.id)}
+                            onToggleShortlist={() => {
+                                toggleShortlist(candidate);
+                                notify(
+                                    isShortlisted(candidate.id)
+                                        ? "Removed from shortlist"
+                                        : "Added to shortlist",
+                                    "success"
+                                );
+                            }}
+                        />
                     ))}
                 </div>
             </div>
 
             <Pagination page={page} totalPages={1} onPageChange={setPage} />
+
+            {/* view candidate details modal */}
+            {selectedCandidate && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+                    <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h2 className="text-lg font-semibold text-gray-900">
+                                {selectedCandidate.name}
+                            </h2>
+                            <button
+                                type="button"
+                                onClick={() => setSelectedCandidate(null)}
+                                className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                            >
+                                <X className="size-5" />
+                            </button>
+                        </div>
+
+                        <dl className="flex flex-col gap-3 text-sm">
+                            <div>
+                                <dt className="text-gray-400">Profession</dt>
+                                <dd className="font-medium text-gray-900 capitalize">
+                                    {selectedCandidate.profession}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-gray-400">Profession number</dt>
+                                <dd className="font-medium text-gray-900">
+                                    {selectedCandidate.profession_number}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-gray-400">Qualification</dt>
+                                <dd className="font-medium text-gray-900">
+                                    {selectedCandidate.qualification}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-gray-400">Skills / Specialization</dt>
+                                <dd className="font-medium text-gray-900">
+                                    {selectedCandidate.skills}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-gray-400">Experience</dt>
+                                <dd className="font-medium text-gray-900">
+                                    {selectedCandidate.experience}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-gray-400">Availability</dt>
+                                <dd className="font-medium text-gray-900">
+                                    {selectedCandidate.availability}
+                                </dd>
+                            </div>
+                            <div>
+                                <dt className="text-gray-400">Location</dt>
+                                <dd className="font-medium text-gray-900">
+                                    {selectedCandidate.location}
+                                </dd>
+                            </div>
+                        </dl>
+
+                        <div className="mt-6 flex gap-3">
+                            <Button
+                                variant="secondary"
+                                fullWidth
+                                onClick={() => setSelectedCandidate(null)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="primary"
+                                fullWidth
+                                onClick={async () => {
+                                    try {
+                                        const today = new Date();
+                                        const future = new Date();
+                                        future.setDate(today.getDate() + 7);
+                                        await createBooking(
+                                            selectedCandidate.id,
+                                            today.toISOString().split("T")[0],
+                                            future.toISOString().split("T")[0]
+                                        );
+                                        notify("Booking request sent!", "success");
+                                        setSelectedCandidate(null);
+                                    } catch (err) {
+                                        console.error("Failed to create booking:", err);
+                                        notify("Couldn't send booking request. Please try again.", "error");
+                                    }
+                                }}
+                            >
+                                Book
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

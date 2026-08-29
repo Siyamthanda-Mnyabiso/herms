@@ -9,6 +9,7 @@ import NotFound from "../pages/NotFound";
 import OrganizationLayout from "../layouts/OrganizationLayout";
 import OrganizationDashboard from "../pages/organization/OrganizationDashboard";
 import BrowseCandidates from "../pages/organization/BrowseCandidates";
+import Shortlisted from "../pages/organization/Shortlisted";
 
 import ProfessionalLayout from "../layouts/ProfessionalLayout";
 import ProfessionalDashboard from "../pages/professional/ProfessionalDashboard";
@@ -45,6 +46,7 @@ export default function AppRoutes() {
       <Route path="/organization" element={<OrganizationLayout />}>
         <Route index element={<OrganizationDashboard />} />
         <Route path="browse" element={<BrowseCandidates />} />
+        <Route path="shortlisted" element={<Shortlisted />} />
         <Route path="bookings" element={<PendingBookings />} />
         <Route path="bookings/accepted" element={<AcceptedBookings />} />
         <Route path="bookings/declined" element={<DeclinedBookings />} />

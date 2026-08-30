@@ -2,25 +2,61 @@ import AuthHeader from "../common/AuthHeader.jsx";
 import Input from "../common/Input.jsx";
 import Button from "../common/Button.jsx";
 import Select from "../common/Select.jsx";
-import SelectRole from "../common/SelectRole.jsx";
 import Password from "../common/Password.jsx";
 import {useState} from "react";
-import AccountType from "./AccountType.jsx";
+import {useNavigate} from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth.js";
+import { useNotification } from "../../context/NotificationContext.jsx";
+import { dashboardPathForRole } from "../../utils/constants.js";
 
 function Registration(){
 
-    const [selectedRole, setSelectedRole] = useState("");
+    const [role, setRole] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+
+    const { registerProfessional } = useAuth();
+    const { notify } = useNotification();
+    const navigate = useNavigate();
+
+    async function handleSubmit(ev) {
+        ev.preventDefault();
+
+        if (!role || role === "--select role--") {
+            notify("Please select a role.", "error");
+            return;
+        }
+        if (password !== confirmPassword) {
+            notify("Passwords do not match.", "error");
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            const data = await registerProfessional({ role, firstName, lastName, email, phoneNumber, password });
+            navigate(dashboardPathForRole(data.role));
+        } catch (err) {
+            notify(err.response?.data ?? "Registration failed. Please try again.", "error");
+        } finally {
+            setSubmitting(false);
+        }
+    }
 
     return(
     <div className="registration-form">
         <AuthHeader /><br />
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
 
             <Select
                 name="role"
                 label="Role"
-                value={selectedRole}
-                onChange={(ev) => setSelectedRole(ev.target.value)}
+                value={role}
+                onChange={(ev) => setRole(ev.target.value)}
                 options={[
                     {value:"--select role--", label:"-- Select Role --"},
                     {value:"teacher",label:"Teacher"},
@@ -31,14 +67,16 @@ function Registration(){
                 ]}
             />
             <div className="grid grid-cols-2  gap-4">
-                <Input label="First Name" type="first-name" placeholder="Enter your first name" />
-                <Input label="Last Name" type="last-name" placeholder="Enter your last name" />
+                <Input label="First Name" placeholder="Enter your first name" value={firstName} onChange={(ev) => setFirstName(ev.target.value)} required />
+                <Input label="Last Name" placeholder="Enter your last name" value={lastName} onChange={(ev) => setLastName(ev.target.value)} required />
             </div>
-            <Input label="Email" type="email" placeholder="Enter your email" />
+            <Input label="Email" type="email" placeholder="Enter your email" value={email} onChange={(ev) => setEmail(ev.target.value)} required />
 
-            <Input label="Phone number" type="phone-number" placeholder="Enter your phone number" />
-            <Password />
-             <Button variant="primary" size="md">Register</Button>
+            <Input label="Phone number" placeholder="Enter your phone number" value={phoneNumber} onChange={(ev) => setPhoneNumber(ev.target.value)} required />
+            <Password value={password} onChange={setPassword} confirmValue={confirmPassword} onConfirmChange={setConfirmPassword} />
+             <Button variant="primary" size="md" type="submit" disabled={submitting}>
+                 {submitting ? "Creating account..." : "Register"}
+             </Button>
 
 
         </form>

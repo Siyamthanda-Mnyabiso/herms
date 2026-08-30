@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { Sparkle } from "lucide-react";
+import { Sparkle, LogOut } from "lucide-react";
 
-export default function Sidebar({ sections, user }) {
+export default function Sidebar({ sections, user, onLogout }) {
   return (
     <aside className="flex h-screen w-60 shrink-0 flex-col bg-sidebar text-white">
       <div className="flex items-center gap-2 px-5 py-5">
@@ -45,10 +45,20 @@ export default function Sidebar({ sections, user }) {
         <span className="flex size-9 items-center justify-center rounded-full bg-sidebar-active text-sm font-semibold">
           {user.initials}
         </span>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{user.name}</p>
           <p className="truncate text-xs text-sidebar-muted">{user.role}</p>
         </div>
+        {onLogout && (
+          <button
+            type="button"
+            aria-label="Log out"
+            onClick={onLogout}
+            className="flex size-8 shrink-0 items-center justify-center rounded-lg text-sidebar-muted hover:bg-sidebar-hover hover:text-white"
+          >
+            <LogOut className="size-4" />
+          </button>
+        )}
       </div>
     </aside>
   );

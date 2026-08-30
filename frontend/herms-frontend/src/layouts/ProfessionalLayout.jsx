@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   User,
@@ -11,6 +11,7 @@ import {
   Bell,
 } from "lucide-react";
 import Sidebar from "../components/navigation/Sidebar";
+import { useAuth } from "../hooks/useAuth.js";
 
 const SECTIONS = [
   {
@@ -37,9 +38,25 @@ const SECTIONS = [
 ];
 
 export default function ProfessionalLayout() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate("/login");
+  }
+
+  const initials = user?.name
+    ? user.name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()
+    : "";
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar sections={SECTIONS} user={{ initials: "", name: "", role: "" }} />
+      <Sidebar
+        sections={SECTIONS}
+        user={{ initials, name: user?.name ?? "", role: user?.role ?? "" }}
+        onLogout={handleLogout}
+      />
       <div className="flex flex-1 flex-col">
         <header className="flex items-center justify-end gap-4 border-b border-gray-100 bg-white px-6 py-3">
           <button

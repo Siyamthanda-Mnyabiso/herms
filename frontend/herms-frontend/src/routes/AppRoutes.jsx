@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
+import RoleRoute from "./RoleRoute.jsx";
+
 import Home from "../pages/Home";
 import Login from "../pages/auth/Login.jsx";
 import Register from "../pages/auth/Register.jsx";
@@ -43,23 +45,27 @@ export default function AppRoutes() {
         <Route path="/reset-password" element={<ResetPassword/>} />
         <Route path="/forgot-password/reset-password" element={<ResetPassword />} />
 
-      <Route path="/organization" element={<OrganizationLayout />}>
-        <Route index element={<OrganizationDashboard />} />
-        <Route path="browse" element={<BrowseCandidates />} />
-        <Route path="shortlisted" element={<Shortlisted />} />
-        <Route path="bookings" element={<PendingBookings />} />
-        <Route path="bookings/accepted" element={<AcceptedBookings />} />
-        <Route path="bookings/declined" element={<DeclinedBookings />} />
-        <Route path="bookings/expired" element={<ExpiredBookings />} />
-        <Route path="bookings/confirmed" element={<ConfirmedBookings />} />
-        <Route path="bookings/history" element={<BookingHistory />} />
+      <Route element={<RoleRoute roles={["hospital", "pharmacy", "school"]} />}>
+        <Route path="/organization" element={<OrganizationLayout />}>
+          <Route index element={<OrganizationDashboard />} />
+          <Route path="browse" element={<BrowseCandidates />} />
+          <Route path="shortlisted" element={<Shortlisted />} />
+          <Route path="bookings" element={<PendingBookings />} />
+          <Route path="bookings/accepted" element={<AcceptedBookings />} />
+          <Route path="bookings/declined" element={<DeclinedBookings />} />
+          <Route path="bookings/expired" element={<ExpiredBookings />} />
+          <Route path="bookings/confirmed" element={<ConfirmedBookings />} />
+          <Route path="bookings/history" element={<BookingHistory />} />
+        </Route>
       </Route>
 
-      <Route path="/professional" element={<ProfessionalLayout />}>
-        <Route index element={<ProfessionalDashboard />} />
-        <Route path="requests" element={<BookingRequest />} />
-        <Route path="bookings" element={<AcceptedBookings />} />
-        <Route path="bookings/history" element={<BookingHistory />} />
+      <Route element={<RoleRoute roles={["doctor", "nurse", "teacher", "pharmacist"]} />}>
+        <Route path="/professional" element={<ProfessionalLayout />}>
+          <Route index element={<ProfessionalDashboard />} />
+          <Route path="requests" element={<BookingRequest />} />
+          <Route path="bookings" element={<AcceptedBookings />} />
+          <Route path="bookings/history" element={<BookingHistory />} />
+        </Route>
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

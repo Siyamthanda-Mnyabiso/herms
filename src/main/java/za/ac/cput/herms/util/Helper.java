@@ -1,5 +1,8 @@
 package za.ac.cput.herms.util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.Date;
@@ -139,6 +142,27 @@ public class Helper {
     public static boolean isPharmacistLicenseNoValid(String licenseNo){
         // Pharmacist format matches Doctors
         return isDoctorLicenseNoValid(licenseNo);
+    }
+
+    public static String hashPassword(String password){
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) {
+                hex.append(String.format("%02x", b));
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 algorithm not available", e);
+        }
+    }
+
+    public static boolean matchesPassword(String rawPassword, String hashedPassword){
+        if (rawPassword == null || hashedPassword == null) {
+            return false;
+        }
+        return hashPassword(rawPassword).equals(hashedPassword);
     }
 
 }

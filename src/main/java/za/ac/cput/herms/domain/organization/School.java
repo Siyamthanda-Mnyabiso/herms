@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
+import za.ac.cput.herms.domain.ContactDetails;
 import java.util.Objects;
 @Entity
 @Getter
@@ -30,8 +31,15 @@ public class School extends Organization {
         Primary, HighSchool;
     }
 
-    public School() {
+    protected School() {
 
+    }
+
+    protected School(Builder builder) {
+        super(builder);
+        this.schoolType = builder.schoolType;
+        this.type = builder.type;
+        this.typeOfSchool = builder.typeOfSchool;
     }
 
     @Override
@@ -57,22 +65,16 @@ public class School extends Organization {
 
     @Override
     public int hashCode() {
-        return Objects.hash(schoolType,type, typeOfSchool);
+        return Objects.hash(super.hashCode(), schoolType, type, typeOfSchool);
     }
 
-    public static class Builder {
+    public static class Builder extends Organization.Builder {
         private String schoolType;
-        private String address;
         private Type type;
         private SchoolType typeOfSchool;
 
         public Builder setSchoolType(String schoolType) {
             this.schoolType = schoolType;
-            return this;
-        }
-
-        public Builder setAddress(String address) {
-            this.address = address;
             return this;
         }
 
@@ -86,7 +88,26 @@ public class School extends Organization {
             return this;
         }
 
+        @Override
+        public Builder setOrganizationId(String organizationId) {
+            super.setOrganizationId(organizationId);
+            return this;
+        }
+
+        @Override
+        public Builder setOrganizationName(String organizationName) {
+            super.setOrganizationName(organizationName);
+            return this;
+        }
+
+        @Override
+        public Builder setContactDetails(ContactDetails contactDetails) {
+            super.setContactDetails(contactDetails);
+            return this;
+        }
+
         public Builder copy(School school) {
+            super.copy(school);
             this.schoolType = school.schoolType;
             this.type = school.type;
             this.typeOfSchool = school.typeOfSchool;
@@ -94,8 +115,7 @@ public class School extends Organization {
         }
 
         public School build() {
-            School school = new School();
-            return school;
+            return new School(this);
         }
     }
 }

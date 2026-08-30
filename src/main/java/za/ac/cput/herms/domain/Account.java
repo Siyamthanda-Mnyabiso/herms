@@ -1,0 +1,67 @@
+package za.ac.cput.herms.domain;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Account {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long accountId;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String passwordHash;
+
+    @Column(nullable = false)
+    private String role;
+
+    @Column(nullable = false)
+    private String refId;
+
+    private String token;
+
+    protected Account() {
+    }
+
+    public Account(String email, String passwordHash, String role, String refId) {
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.role = role;
+        this.refId = refId;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getRefId() {
+        return refId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+}

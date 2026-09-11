@@ -18,6 +18,14 @@ class AddressFactoryTest {
     }
 
     @Test
+    void createAddressWithSingleWordCity() {
+        Address address = AddressFactory.createAddress("Modderdam Rd","7535","Bellville","WC");
+        assertEquals("7535",address.getPostalCode());
+        assertEquals("Bellville",address.getCity());
+        assertEquals("WC",address.getProvince());
+    }
+
+    @Test
 
     void testToFail(){
         assertThrows(IllegalArgumentException.class,()->

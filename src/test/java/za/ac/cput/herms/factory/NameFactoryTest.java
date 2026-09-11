@@ -10,8 +10,10 @@ class NameFactoryTest {
     @Test
     void createName() {
         Name name = NameFactory.createName("Gee","","Mangaliso");
-//        assertEquals("Gee",name.getFirstName());
         assertNotNull(name);
+        assertEquals("Gee",name.getFirstName());
+        assertEquals("",name.getMiddleName());
+        assertEquals("Mangaliso",name.getLastName());
         System.out.println(name);
     }
 

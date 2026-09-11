@@ -1,21 +1,19 @@
-import { ChevronDown, Moon } from "lucide-react";
 import Button from "../common/Button";
 import hermsLogo from "../../assets/images/herms-logo.png";
 import { Link } from "react-router-dom";
 
 const NAV_LINKS = [
+  { label: "Professionals", href: "#for-professionals" },
+  { label: "Organizations", href: "#for-organizations" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "For Professionals", href: "#for-professionals" },
-  { label: "For Organizations", href: "#for-organizations" },
-  { label: "About Us", href: "#about" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "About", href: "#about" },
 ];
 
 export default function Navbar() {
   return (
     <header className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 lg:px-10">
       <a href="/" className="flex items-center">
-        <img src={hermsLogo} alt="HERMS" className="h-10 w-auto" />
+        <img src={hermsLogo} alt="HERMS" className="h-12 w-auto" />
       </a>
 
       <nav className="hidden items-center gap-8 text-sm font-medium text-gray-600 lg:flex">
@@ -28,28 +26,16 @@ export default function Navbar() {
             {link.label}
           </a>
         ))}
-
-        <button
-          type="button"
-          className="flex items-center gap-1 hover:text-gray-900"
-        >
-          Resources
-          <ChevronDown className="size-4" />
-        </button>
       </nav>
 
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          aria-label="Toggle theme"
-          className="flex size-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
-        >
-          <Moon className="size-4" />
-        </button>
+      <div className="flex items-center gap-5">
+        <Link to="/login" className="hidden text-sm font-medium text-gray-600 hover:text-gray-900 sm:block">
+          Log In
+        </Link>
 
-        <Link to="/login">
-          <Button variant="secondary" size="sm">
-            Log in
+        <Link to="/account">
+          <Button className="!bg-gray-900 !text-white hover:!bg-gray-800" size="sm">
+            Get Started
           </Button>
         </Link>
       </div>

@@ -1,6 +1,6 @@
 import Button from "../common/Button.jsx";
 import {Link} from "react-router-dom";
-import { FaUser, FaBuilding } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 function AccountType(){
     return(
@@ -10,7 +10,7 @@ function AccountType(){
                     Choose Account Type
                 </label>
                 <label className="text-gray-500 text-sm italic ">
-                   If you need more details, please check out  <a href="/help" className="text-green-950 font-medium text-sm italic hover:text-green-700">Help center</a>
+                   Organizations are onboarded directly by our team — please email or call us to set up an account. If you need more details, please check out  <a href="/help" className="text-green-950 font-medium text-sm italic hover:text-green-700">Help center</a>
                 </label>
                 <div className="flex flex-col  gap-2">
                     <Link to="/register">
@@ -19,17 +19,7 @@ function AccountType(){
                             Freelancer Account
                         </Button>
                     </Link>
-                    <Link to="/organization-registration">
-                        <Button variant="secondary" className="flex items-center w-full">
-                            <FaBuilding className="text-gray-600" />
-                            Organization Account
-                        </Button>
-                    </Link>
                 </div>
-
-                <label className=" text-sm  text-green-950 italic hover:text-gray-700">
-                    Select your account type to customize fields
-                </label>
             </form>
 
         </div>

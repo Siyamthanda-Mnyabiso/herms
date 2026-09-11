@@ -26,7 +26,7 @@ public class Helper {
     }
 
     public static boolean isCityValid(String city){
-        String regex = "^[A-Za-z\\\\s'-]{2,50}$";
+        String regex = "^[A-Za-z\\s'-]{2,50}$";
         if((city== null || (city.isBlank()))){
             return false;
         }

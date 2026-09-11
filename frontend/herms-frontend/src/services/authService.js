@@ -6,7 +6,7 @@ export async function login(email, password) {
     return response.data;
 }
 
-export async function registerProfessional({ role, firstName, lastName, email, phoneNumber, password }) {
+export async function registerProfessional({ role, firstName, lastName, email, phoneNumber, password, licenseNo }) {
     const response = await api.post(ENDPOINTS.REGISTER_PROFESSIONAL, {
         role,
         firstName,
@@ -14,16 +14,7 @@ export async function registerProfessional({ role, firstName, lastName, email, p
         email,
         phoneNumber,
         password,
-    });
-    return response.data;
-}
-
-export async function registerOrganization({ role, organizationName, email, password }) {
-    const response = await api.post(ENDPOINTS.REGISTER_ORGANIZATION, {
-        role,
-        organizationName,
-        email,
-        password,
+        licenseNo,
     });
     return response.data;
 }

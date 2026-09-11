@@ -5,7 +5,7 @@ import Select from "../../components/common/Select";
 import Button from "../../components/common/Button";
 import Pagination from "../../components/common/Pagination";
 import CandidateCard from "../../components/cards/CandidateCard";
-import { getProfessionalsByType } from "../../services/staffService";
+import { getCandidatesByProfession, getAllCandidates } from "../../services/candidateService";
 import { createBooking } from "../../services/bookingService";
 import { useNotification } from "../../context/NotificationContext";
 import { useShortlist } from "../../context/ShortlistContext";
@@ -43,37 +43,19 @@ export default function BrowseCandidates() {
     );
     const activeProfession = searchMatchedProfession || profession;
 
-    function mapPeople(data, professionType) {
-        return data.map((person) => ({
-            id: person.personId,
-            name: `Candidate #${String(person.personId).padStart(3, "0")}`,
-            profession_number: person.licenseNo ?? "—",
-            qualification: person.qualification ?? "—",
-            skills: person.specialization ?? "—",
-            availabilityStatus: person.availabilityStatus ?? "NOT_AVAILABLE",
-            availability:
-                person.availabilityStatus === "AVAILABLE" ? "Available" : "Not Available",
-            dates: "—",
-            location: person.address?.city ?? "—",
-            province: person.address?.province ?? "—",
-            experience: person.yearsOfExperience
-                ? `${person.yearsOfExperience} years`
-                : "—",
-            profession: professionType,
-        }));
-    }
-
     function handleError(err) {
         console.error("Failed to load professionals:", err);
     }
+
     useEffect(() => {
         const term = searchTerm.trim().toLowerCase();
         const isProfessionSearch = PROFESSION_KEYWORDS.includes(term);
 
+        setLoading(true);
+
         if (isProfessionSearch) {
-            setLoading(true);
-            getProfessionalsByType(term)
-                .then(mapAndSet)
+            getCandidatesByProfession(term)
+                .then(setCandidates)
                 .catch(handleError)
                 .finally(() => setLoading(false));
             return;
@@ -82,31 +64,14 @@ export default function BrowseCandidates() {
         const shouldSearchAll =
             term.length > 0 || location !== "all" || availability !== "all";
 
-        setLoading(true);
-
         if (shouldSearchAll) {
-            Promise.all([
-                getProfessionalsByType("nurse"),
-                getProfessionalsByType("doctor"),
-                getProfessionalsByType("teacher"),
-                getProfessionalsByType("pharmacist"),
-            ])
-                .then(([nurses, doctors, teachers, pharmacists]) => {
-                    const all = [
-                        ...mapPeople(nurses, "nurse"),
-                        ...mapPeople(doctors, "doctor"),
-                        ...mapPeople(teachers, "teacher"),
-                        ...mapPeople(pharmacists, "pharmacist"),
-                    ];
-                    setCandidates(all);
-                })
+            getAllCandidates()
+                .then(setCandidates)
                 .catch(handleError)
                 .finally(() => setLoading(false));
         } else {
-            getProfessionalsByType(profession)
-                .then((data) => {
-                    setCandidates(mapPeople(data, profession));
-                })
+            getCandidatesByProfession(profession)
+                .then(setCandidates)
                 .catch(handleError)
                 .finally(() => setLoading(false));
         }

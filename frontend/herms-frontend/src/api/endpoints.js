@@ -2,7 +2,6 @@ export const ENDPOINTS = {
 
     LOGIN: "/auth/login",
     REGISTER_PROFESSIONAL: "/auth/register/professional",
-    REGISTER_ORGANIZATION: "/auth/register/organization",
     LOGOUT: "/auth/logout",
 
     BOOKINGS_CREATE: "/Bookings/create",

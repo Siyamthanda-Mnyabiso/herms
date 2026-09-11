@@ -10,8 +10,8 @@ import za.ac.cput.herms.repository.BookingsRepository;
 import za.ac.cput.herms.repository.PersonRepository;
 import za.ac.cput.herms.util.Helper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,20 +26,15 @@ class BookingFactoryTest {
         private BookingsRepository bookingsRepository;
 
         private Bookings booking,saved;
-        private SimpleDateFormat sdf;
         private Date bookingDate;
         private Date startDay;
         private Date endDay;
 
-
-
-    BookingFactoryTest() throws ParseException {
-        sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false);
-
-        bookingDate = sdf.parse("13/08/2026");
-        startDay = sdf.parse("14/08/2026");
-        endDay = sdf.parse("07/09/2026");
+    BookingFactoryTest() {
+        ZoneId zone = ZoneId.systemDefault();
+        bookingDate = Date.from(LocalDate.now().atStartOfDay(zone).toInstant());
+        startDay = Date.from(LocalDate.now().plusDays(1).atStartOfDay(zone).toInstant());
+        endDay = Date.from(LocalDate.now().plusDays(30).atStartOfDay(zone).toInstant());
     }
 
     @Test

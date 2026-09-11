@@ -15,13 +15,17 @@ import Shortlisted from "../pages/organization/Shortlisted";
 
 import ProfessionalLayout from "../layouts/ProfessionalLayout";
 import ProfessionalDashboard from "../pages/professional/ProfessionalDashboard";
+import ProfessionalProfile from "../pages/professional/Profile";
+import ProfessionalAvailability from "../pages/professional/Availability";
+import ProfessionalQualifications from "../pages/professional/Qualifications";
+import ProfessionalExperience from "../pages/professional/Experience";
+import ProfessionalSkills from "../pages/professional/Skills";
 
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
 import AccountType from "../components/forms/AccountType.jsx";
 import Account from "../pages/auth/Account.jsx";
-import OrganizationRegistration from "../pages/auth/OrganizationRegistration.jsx";
 import ResetPassword from "../pages/auth/ResetPassword.jsx";
 
 import BookingRequest from "../pages/bookings/BookingRequest";
@@ -41,7 +45,6 @@ export default function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/account" element={<Account/>} />
-        <Route path="/organization-registration" element={<OrganizationRegistration/>} />
         <Route path="/reset-password" element={<ResetPassword/>} />
         <Route path="/forgot-password/reset-password" element={<ResetPassword />} />
 
@@ -62,6 +65,11 @@ export default function AppRoutes() {
       <Route element={<RoleRoute roles={["doctor", "nurse", "teacher", "pharmacist"]} />}>
         <Route path="/professional" element={<ProfessionalLayout />}>
           <Route index element={<ProfessionalDashboard />} />
+          <Route path="profile" element={<ProfessionalProfile />} />
+          <Route path="availability" element={<ProfessionalAvailability />} />
+          <Route path="qualifications" element={<ProfessionalQualifications />} />
+          <Route path="experience" element={<ProfessionalExperience />} />
+          <Route path="skills" element={<ProfessionalSkills />} />
           <Route path="requests" element={<BookingRequest />} />
           <Route path="bookings" element={<AcceptedBookings />} />
           <Route path="bookings/history" element={<BookingHistory />} />

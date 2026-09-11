@@ -7,6 +7,7 @@ public class RegisterProfessionalRequest {
     private String email;
     private String phoneNumber;
     private String password;
+    private String licenseNo;
 
     public String getRole() {
         return role;
@@ -54,5 +55,13 @@ public class RegisterProfessionalRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getLicenseNo() {
+        return licenseNo;
+    }
+
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
     }
 }

@@ -8,6 +8,7 @@ import za.ac.cput.herms.domain.Doctor;
 import za.ac.cput.herms.domain.Nurse;
 import za.ac.cput.herms.domain.Teacher;
 import za.ac.cput.herms.domain.Pharmacist;
+import za.ac.cput.herms.repository.CandidateSummary;
 import za.ac.cput.herms.service.IStaffService;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class StaffController {
     }
 
     @GetMapping("/nurse/all")
-    public ResponseEntity<List<Nurse>> getAllNurses() {
-        return ResponseEntity.ok(staffService.getAllNurses());
+    public ResponseEntity<List<CandidateSummary>> getAllNurses() {
+        return ResponseEntity.ok(staffService.getAllNurseSummaries());
     }
 
     @PutMapping("/nurse/update")
@@ -72,8 +73,8 @@ public class StaffController {
     }
 
     @GetMapping("/doctor/all")
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
-        return ResponseEntity.ok(staffService.getAllDoctors());
+    public ResponseEntity<List<CandidateSummary>> getAllDoctors() {
+        return ResponseEntity.ok(staffService.getAllDoctorSummaries());
     }
 
     @PutMapping("/doctor/update")
@@ -109,8 +110,8 @@ public class StaffController {
     }
 
     @GetMapping("/teacher/all")
-    public ResponseEntity<List<Teacher>> getAllTeachers() {
-        return ResponseEntity.ok(staffService.getAllTeachers());
+    public ResponseEntity<List<CandidateSummary>> getAllTeachers() {
+        return ResponseEntity.ok(staffService.getAllTeacherSummaries());
     }
 
     @PutMapping("/teacher/update")
@@ -146,8 +147,8 @@ public class StaffController {
     }
 
     @GetMapping("/pharmacist/all")
-    public ResponseEntity<List<Pharmacist>> getAllPharmacists() {
-        return ResponseEntity.ok(staffService.getAllPharmacists());
+    public ResponseEntity<List<CandidateSummary>> getAllPharmacists() {
+        return ResponseEntity.ok(staffService.getAllPharmacistSummaries());
     }
 
     @PutMapping("/pharmacist/update")

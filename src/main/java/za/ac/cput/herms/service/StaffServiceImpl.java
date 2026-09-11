@@ -6,7 +6,12 @@ import org.springframework.stereotype.Service;
 import za.ac.cput.herms.domain.Doctor;
 import za.ac.cput.herms.domain.Nurse;
 import za.ac.cput.herms.domain.Person;
+import za.ac.cput.herms.repository.CandidateSummary;
+import za.ac.cput.herms.repository.DoctorRepository;
+import za.ac.cput.herms.repository.NurseRepository;
 import za.ac.cput.herms.repository.PersonRepository;
+import za.ac.cput.herms.repository.PharmacistRepository;
+import za.ac.cput.herms.repository.TeacherRepository;
 import za.ac.cput.herms.service.IStaffService;
 import za.ac.cput.herms.util.Helper;
 import za.ac.cput.herms.domain.Teacher;
@@ -19,10 +24,22 @@ import java.util.stream.Collectors;
 public class StaffServiceImpl implements IStaffService {
 
     private final PersonRepository personRepository;
+    private final NurseRepository nurseRepository;
+    private final DoctorRepository doctorRepository;
+    private final TeacherRepository teacherRepository;
+    private final PharmacistRepository pharmacistRepository;
 
     @Autowired
-    public StaffServiceImpl(PersonRepository personRepository) {
-        this.personRepository= personRepository;
+    public StaffServiceImpl(PersonRepository personRepository,
+                             NurseRepository nurseRepository,
+                             DoctorRepository doctorRepository,
+                             TeacherRepository teacherRepository,
+                             PharmacistRepository pharmacistRepository) {
+        this.personRepository = personRepository;
+        this.nurseRepository = nurseRepository;
+        this.doctorRepository = doctorRepository;
+        this.teacherRepository = teacherRepository;
+        this.pharmacistRepository = pharmacistRepository;
     }
 
     @Override
@@ -42,6 +59,11 @@ public class StaffServiceImpl implements IStaffService {
                 .filter(person -> person instanceof Nurse)
                 .map(person -> (Nurse) person)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CandidateSummary> getAllNurseSummaries() {
+        return nurseRepository.findAllBy();
     }
 
     @Override
@@ -86,6 +108,11 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public List<CandidateSummary> getAllDoctorSummaries() {
+        return doctorRepository.findAllBy();
+    }
+
+    @Override
     public Doctor updateDoctor(Doctor doctor) {
         return personRepository.save(doctor);
     }
@@ -127,6 +154,11 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public List<CandidateSummary> getAllTeacherSummaries() {
+        return teacherRepository.findAllBy();
+    }
+
+    @Override
     public Teacher updateTeacher(Teacher teacher) {
         return personRepository.save(teacher);
     }
@@ -165,6 +197,11 @@ public class StaffServiceImpl implements IStaffService {
                 .filter(person -> person instanceof Pharmacist)
                 .map(person -> (Pharmacist) person)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CandidateSummary> getAllPharmacistSummaries() {
+        return pharmacistRepository.findAllBy();
     }
 
     @Override

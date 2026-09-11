@@ -10,7 +10,6 @@ import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.domain.organization.School;
 import za.ac.cput.herms.dto.AuthResponse;
 import za.ac.cput.herms.dto.LoginRequest;
-import za.ac.cput.herms.dto.RegisterOrganizationRequest;
 import za.ac.cput.herms.dto.RegisterProfessionalRequest;
 import za.ac.cput.herms.repository.AccountRepository;
 import za.ac.cput.herms.service.IStaffService;
@@ -61,34 +60,51 @@ public class AuthController {
                 .build();
 
         String role = request.getRole() == null ? "" : request.getRole().toLowerCase();
+        String licenseNo = request.getLicenseNo();
         Person person;
         switch (role) {
             case "doctor":
+                if (!Helper.isDoctorLicenseNoValid(licenseNo)) {
+                    return ResponseEntity.badRequest().body("Invalid or missing doctor license number");
+                }
                 person = staffService.createDoctor(new Doctor.Builder()
                         .setName(name)
                         .setContactDetails(contactDetails)
                         .setAvailabilityStatus(Doctor.AvailabilityStatus.AVAILABLE)
+                        .setLicenseNo(licenseNo)
                         .build());
                 break;
             case "nurse":
+                if (!Helper.isNurseLicenseNoValid(licenseNo)) {
+                    return ResponseEntity.badRequest().body("Invalid or missing nurse license number");
+                }
                 person = staffService.createNurse(new Nurse.Builder()
                         .setName(name)
                         .setContactDetails(contactDetails)
                         .setAvailabilityStatus(Nurse.AvailabilityStatus.AVAILABLE)
+                        .setLicenseNo(licenseNo)
                         .build());
                 break;
             case "teacher":
+                if (!Helper.isTeacherLicenseNoValid(licenseNo)) {
+                    return ResponseEntity.badRequest().body("Invalid or missing teacher license number");
+                }
                 person = staffService.createTeacher(new Teacher.Builder()
                         .setName(name)
                         .setContactDetails(contactDetails)
                         .setAvailabilityStatus(Teacher.AvailabilityStatus.AVAILABLE)
+                        .setLicenseNo(licenseNo)
                         .build());
                 break;
             case "pharmacist":
+                if (!Helper.isPharmacistLicenseNoValid(licenseNo)) {
+                    return ResponseEntity.badRequest().body("Invalid or missing pharmacist license number");
+                }
                 person = staffService.createPharmacist(new Pharmacist.Builder()
                         .setName(name)
                         .setContactDetails(contactDetails)
                         .setAvailabilityStatus(Pharmacist.AvailabilityStatus.AVAILABLE)
+                        .setLicenseNo(licenseNo)
                         .build());
                 break;
             default:
@@ -105,68 +121,6 @@ public class AuthController {
         String fullName = (request.getFirstName() + " " + request.getLastName()).trim();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new AuthResponse(account.getToken(), role, account.getRefId(), fullName, request.getEmail()));
-    }
-
-    @PostMapping("/register/organization")
-    public ResponseEntity<?> registerOrganization(@RequestBody RegisterOrganizationRequest request) {
-        if (accountRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with this email already exists");
-        }
-
-        ContactDetails contactDetails = new ContactDetails.Builder()
-                .setEmail(request.getEmail())
-                .build();
-        String organizationId = UUID.randomUUID().toString();
-        String role = request.getRole() == null ? "" : request.getRole().toLowerCase();
-        String refId;
-
-        switch (role) {
-            case "hospital": {
-                Hospital hospital = hospitalService.Create(new Hospital.Builder()
-                        .setOrganizationId(organizationId)
-                        .setOrganizationName(request.getOrganizationName())
-                        .setContactDetails(contactDetails)
-                        .setHospitalType("General")
-                        .setTypeOfHospital(Hospital.HospitalType.Public)
-                        .build());
-                refId = hospital.getOrganizationId();
-                break;
-            }
-            case "pharmacy": {
-                Pharmacy pharmacy = pharmacyService.Create(new Pharmacy.Builder()
-                        .setOrganizationId(organizationId)
-                        .setOrganizationName(request.getOrganizationName())
-                        .setContactDetails(contactDetails)
-                        .setPharmacyType("Retail")
-                        .build());
-                refId = pharmacy.getOrganizationId();
-                break;
-            }
-            case "school": {
-                School school = schoolService.Create(new School.Builder()
-                        .setOrganizationId(organizationId)
-                        .setOrganizationName(request.getOrganizationName())
-                        .setContactDetails(contactDetails)
-                        .setSchoolType("General")
-                        .setType(School.Type.Public)
-                        .setSchoolTypeOfSchool(School.SchoolType.Primary)
-                        .build());
-                refId = school.getOrganizationId();
-                break;
-            }
-            default:
-                return ResponseEntity.badRequest().body("Unknown organization role: " + request.getRole());
-        }
-
-        Account account = new Account(request.getEmail(),
-                Helper.hashPassword(request.getPassword()),
-                role,
-                refId);
-        account.setToken(UUID.randomUUID().toString());
-        accountRepository.save(account);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponse(account.getToken(), role, refId, request.getOrganizationName(), request.getEmail()));
     }
 
     @PostMapping("/login")

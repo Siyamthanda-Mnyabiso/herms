@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import Button from "../../components/common/Button";
 import BookingCard from "../../components/cards/BookingCard";
 import { useUpcomingBookings } from "../../hooks/useBookings";
 import ErrorMessage from "../../components/common/ErrorMessage";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import { useAuth } from "../../hooks/useAuth";
+import { getProfile, updateProfile } from "../../services/professionalService";
+import { useNotification } from "../../context/NotificationContext";
 
 const STATS = [];
 
@@ -15,8 +18,42 @@ const PENDING_REQUESTS = [];
 const AVAILABLE_DATES = [];
 
 export default function ProfessionalDashboard() {
+  const { user } = useAuth();
+  const { notify } = useNotification();
+  const [profile, setProfile] = useState(null);
   const [available, setAvailable] = useState(false);
+  const [savingAvailability, setSavingAvailability] = useState(false);
   const { bookings: UPCOMING_BOOKINGS, loading, error, refetch } = useUpcomingBookings();
+
+  useEffect(() => {
+    if (!user?.role || !user?.refId) {
+      return;
+    }
+    getProfile(user.role, user.refId)
+      .then((data) => {
+        setProfile(data);
+        setAvailable(data.availabilityStatus === "AVAILABLE");
+      })
+      .catch((err) => console.error("Failed to load profile:", err));
+  }, [user?.role, user?.refId]);
+
+  async function handleUpdateAvailability() {
+    if (!user?.role || !profile) {
+      return;
+    }
+    setSavingAvailability(true);
+    try {
+      const nextStatus = available ? "AVAILABLE" : "NOT_AVAILABLE";
+      const updated = await updateProfile(user.role, { ...profile, availabilityStatus: nextStatus });
+      setProfile(updated);
+      notify("Availability updated", "success");
+    } catch (err) {
+      console.error("Failed to update availability:", err);
+      notify("Could not update availability", "error");
+    } finally {
+      setSavingAvailability(false);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -118,8 +155,14 @@ export default function ProfessionalDashboard() {
             ))}
           </div>
 
-          <Button variant="amber" fullWidth className="mt-5">
-            Update Availability
+          <Button
+            variant="amber"
+            fullWidth
+            className="mt-5"
+            onClick={handleUpdateAvailability}
+            disabled={savingAvailability}
+          >
+            {savingAvailability ? "Updating..." : "Update Availability"}
           </Button>
         </div>
       </div>

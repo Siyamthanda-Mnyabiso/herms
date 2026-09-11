@@ -9,6 +9,13 @@ import { useAuth } from "../../hooks/useAuth.js";
 import { useNotification } from "../../context/NotificationContext.jsx";
 import { dashboardPathForRole } from "../../utils/constants.js";
 
+const LICENSE_HINTS = {
+    doctor: "Format: 2 letters followed by 7 digits, e.g. AB1234567",
+    pharmacist: "Format: 2 letters followed by 7 digits, e.g. AB1234567",
+    nurse: "Format: 8 digits, e.g. 12345678",
+    teacher: "Format: 6 digits, e.g. 123456",
+};
+
 function Registration(){
 
     const [role, setRole] = useState("");
@@ -16,6 +23,7 @@ function Registration(){
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [licenseNo, setLicenseNo] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [submitting, setSubmitting] = useState(false);
@@ -38,7 +46,7 @@ function Registration(){
 
         setSubmitting(true);
         try {
-            const data = await registerProfessional({ role, firstName, lastName, email, phoneNumber, password });
+            const data = await registerProfessional({ role, firstName, lastName, email, phoneNumber, password, licenseNo });
             navigate(dashboardPathForRole(data.role));
         } catch (err) {
             notify(err.response?.data ?? "Registration failed. Please try again.", "error");
@@ -73,6 +81,19 @@ function Registration(){
             <Input label="Email" type="email" placeholder="Enter your email" value={email} onChange={(ev) => setEmail(ev.target.value)} required />
 
             <Input label="Phone number" placeholder="Enter your phone number" value={phoneNumber} onChange={(ev) => setPhoneNumber(ev.target.value)} required />
+
+            <div>
+                <Input
+                    label="License number"
+                    placeholder="Enter your professional license number"
+                    value={licenseNo}
+                    onChange={(ev) => setLicenseNo(ev.target.value)}
+                    required
+                />
+                {role && LICENSE_HINTS[role] && (
+                    <p className="mt-1 text-xs text-gray-500">{LICENSE_HINTS[role]}</p>
+                )}
+            </div>
             <Password value={password} onChange={setPassword} confirmValue={confirmPassword} onConfirmChange={setConfirmPassword} />
              <Button variant="primary" size="md" type="submit" disabled={submitting}>
                  {submitting ? "Creating account..." : "Register"}

@@ -2,32 +2,41 @@ import {
   ArrowRight,
   Building2,
   CalendarCheck,
-  Lock,
-  ShieldCheck,
+  ChevronRight,
+  Cross,
+  GraduationCap,
+  Landmark,
+  Pill,
   Send,
   UserPlus,
+  Users,
   Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navigation/Navbar";
 import Button from "../components/common/Button";
-import { CandidatePreviewCard } from "../components/cards/CandidateCard";
+import heroImage from "../assets/images/hero_2.png";
 
-const TRUST_BADGES = [
-  { icon: ShieldCheck, label: "Verified Professionals" },
-  { icon: CalendarCheck, label: "Quick & Easy Booking" },
-  { icon: Lock, label: "Secure & Private" },
+const ROLE_CALLOUTS = [
+  { title: "Doctors", description: "Make a difference, anywhere.", position: "right-[44%] bottom-[30%]" },
+  { title: "Nurses", description: "Care knows no borders.", position: "right-[30%] bottom-[12%]" },
+  { title: "Teachers", description: "Empower new futures.", position: "right-[16%] bottom-[26%]" },
+  { title: "Pharmacists", description: "Healthier communities.", position: "right-[3%] bottom-[10%]" },
 ];
 
-const PREVIEW_CANDIDATES = [];
-
-const STATS = [];
+const TRUSTED_BY = [
+  { icon: Cross, label: "Hospitals & Clinics" },
+  { icon: GraduationCap, label: "Schools & Education" },
+  { icon: Landmark, label: "NGOs & Government" },
+  { icon: Pill, label: "Pharmacies & Healthcare" },
+  { icon: Users, label: "And More" },
+];
 
 const HOW_IT_WORKS = [
-  { icon: UserPlus, title: "1. Create Profile", description: "Professionals create their profile. Organizations set up their account." },
-  { icon: Search, title: "2. Find & Match", description: "Organizations find candidates. We match the best fits." },
-  { icon: Send, title: "3. Request & Respond", description: "Organization sends a booking request. Professional has 24h to respond." },
-  { icon: CalendarCheck, title: "4. Confirm & Work", description: "Once accepted, the booking is confirmed. Get the work done." },
+  { icon: UserPlus, title: "Create Profile", description: "Professionals create their profile. Organizations set up their account." },
+  { icon: Search, title: "Find & Match", description: "Organizations find candidates. We match the best fits." },
+  { icon: Send, title: "Request & Respond", description: "Organization sends a booking request. Professional has 24h to respond." },
+  { icon: CalendarCheck, title: "Confirm & Work", description: "Once accepted, the booking is confirmed. Get the work done." },
 ];
 
 export default function Home() {
@@ -36,108 +45,121 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <section className="grid grid-cols-1 gap-10 px-6 py-12 lg:grid-cols-2 lg:px-10 lg:py-16">
-        <div className="flex flex-col justify-center gap-6">
-          <h1 className="text-4xl font-bold leading-tight text-gray-900 lg:text-5xl">
-            The smarter way to find healthcare &amp; education{" "}
-            <span className="text-primary-500">professionals.</span>
-          </h1>
-          <p className="max-w-md text-base text-gray-500">
-            HERMS connects trusted professionals with organizations for temporary
-            staffing, project work, and short-term needs.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Button
-                variant="primary"
+
+      <section className="relative isolate overflow-hidden lg:flex lg:min-h-[680px] lg:items-center">
+        <img
+          src={heroImage}
+          alt="Four healthcare and education professionals overlooking Cape Town"
+          className="h-56 w-full object-cover object-[70%_center] sm:h-72 lg:hidden"
+        />
+        <img
+          src={heroImage}
+          alt=""
+          aria-hidden="true"
+          className="hidden lg:absolute lg:inset-0 lg:-z-10 lg:block lg:size-full lg:object-cover"
+        />
+
+        <div className="mx-auto w-full max-w-7xl px-6 py-10 lg:px-10 lg:py-16">
+          <div className="flex max-w-lg flex-col gap-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+              Skilled people. Stronger communities.
+            </p>
+            <h1 className="text-4xl font-extrabold leading-tight text-gray-900 lg:text-5xl">
+              Connecting Professionals
+              <span className="block text-primary-500">with Purpose</span>
+            </h1>
+            <p className="max-w-md text-base text-gray-500">
+              HERMS links qualified professionals — doctors, nurses, teachers,
+              pharmacists and more — with organizations that need temporary
+              and contract staff.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button
                 size="lg"
                 icon={ArrowRight}
-                onClick={() => navigate("/register/professional")}
-            >
-              I'm a Professional
-            </Button>
-            <Button
-                variant="outline"
-                size="lg"
-                icon={ArrowRight}
-                onClick={() => navigate("/register/organization")}
-            >
-              I'm an Organization
-            </Button>
-          </div>
-          <div className="flex flex-wrap gap-6 pt-2">
-            {TRUST_BADGES.map(({ icon: Icon, label }) => (
-              <span key={label} className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="flex size-7 items-center justify-center rounded-full bg-primary-50 text-primary-500">
-                  <Icon className="size-4" />
-                </span>
-                {label}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="relative flex items-center justify-center rounded-2xl bg-gray-50 p-6">
-          <div className="flex size-full min-h-80 items-center justify-center rounded-xl bg-gray-200 text-gray-400">
-            Hero image
-          </div>
-          <div className="absolute -right-2 top-6 w-64 space-y-3 sm:right-4">
-            {PREVIEW_CANDIDATES.map((candidate) => (
-              <CandidatePreviewCard key={candidate.id} {...candidate} />
-            ))}
-            <button
-              type="button"
-              className="flex w-full items-center justify-between rounded-xl bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-            >
-              View all professionals
-              <ArrowRight className="size-4" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-6 grid grid-cols-2 gap-8 rounded-2xl bg-gray-50 p-8 lg:mx-10 lg:grid-cols-4">
-        {STATS.map(({ icon: Icon, value, label, sub }) => (
-          <div key={label} className="flex items-center gap-3">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-500">
-              <Icon className="size-5" />
-            </span>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">{value}</p>
-              <p className="text-sm font-medium text-gray-700">{label}</p>
-              <p className="text-xs text-gray-400">{sub}</p>
+                className="!bg-gray-900 !text-white hover:!bg-gray-800"
+                onClick={() => navigate("/register")}
+              >
+                I'm a Professional
+              </Button>
+              <Button variant="secondary" size="lg" onClick={() => navigate("/account")}>
+                I'm an Organization
+              </Button>
             </div>
+          </div>
+        </div>
+
+        <p className="absolute right-6 top-6 hidden max-w-[9rem] text-right font-serif text-base italic leading-snug text-gray-400 lg:right-10 lg:block">
+          People Build Brighter Tomorrows
+        </p>
+
+        {ROLE_CALLOUTS.map(({ title, description, position }) => (
+          <div
+            key={title}
+            className={`absolute hidden w-32 rounded-lg bg-white/95 px-2.5 py-2 shadow-md backdrop-blur lg:block ${position}`}
+          >
+            <p className="text-xs font-semibold text-gray-900">{title}</p>
+            <p className="text-[10px] leading-tight text-gray-500">{description}</p>
           </div>
         ))}
       </section>
 
-      <section className="px-6 py-16 lg:px-10">
-        <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">I want to...</h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="rounded-2xl bg-primary-50 p-8">
-            <span className="flex size-12 items-center justify-center rounded-full bg-white text-primary-500">
-              <UserPlus className="size-6" />
+      <section className="border-y border-gray-100 bg-gray-50 px-6 py-10 lg:px-10">
+        <p className="mb-6 text-center text-xs font-semibold uppercase tracking-widest text-gray-400">
+          Trusted by organizations across South Africa
+        </p>
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          {TRUSTED_BY.map(({ icon: Icon, label }) => (
+            <span key={label} className="flex items-center gap-2 text-sm font-medium text-gray-600">
+              <Icon className="size-4" />
+              {label}
             </span>
-            <h3 className="mt-4 text-lg font-semibold text-primary-700">Find Work Opportunities</h3>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-6 py-20 lg:px-10">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary-500">Get Started</p>
+          <h2 className="mt-2 text-2xl font-bold text-gray-900 lg:text-3xl">I want to...</h2>
+        </div>
+        <div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+          <div
+            id="for-professionals"
+            className="group rounded-3xl border border-gray-100 bg-primary-50 p-10 shadow-sm transition-shadow hover:shadow-lg"
+          >
+            <span className="flex size-14 items-center justify-center rounded-2xl bg-white text-primary-500 shadow-sm">
+              <UserPlus className="size-7" />
+            </span>
+            <h3 className="mt-5 text-xl font-semibold text-primary-700">Find Work Opportunities</h3>
             <p className="mt-2 text-sm text-gray-600">
               Create your profile, showcase your skills and get discovered by organizations.
             </p>
-            <Button variant="primary" size="sm" icon={ArrowRight} className="mt-4">
+            <Button
+              variant="primary"
+              icon={ArrowRight}
+              className="mt-6 transition-transform group-hover:translate-x-1"
+              onClick={() => navigate("/register")}
+            >
               Join as a Professional
             </Button>
           </div>
 
-          <div className="rounded-2xl bg-accent-purple-50 p-8">
-            <span className="flex size-12 items-center justify-center rounded-full bg-white text-accent-purple-500">
-              <Building2 className="size-6" />
+          <div
+            id="for-organizations"
+            className="group rounded-3xl border border-gray-100 bg-accent-purple-50 p-10 shadow-sm transition-shadow hover:shadow-lg"
+          >
+            <span className="flex size-14 items-center justify-center rounded-2xl bg-white text-accent-purple-500 shadow-sm">
+              <Building2 className="size-7" />
             </span>
-            <h3 className="mt-4 text-lg font-semibold text-accent-purple-600">Hire Professionals</h3>
+            <h3 className="mt-5 text-xl font-semibold text-accent-purple-600">Hire Professionals</h3>
             <p className="mt-2 text-sm text-gray-600">
               Find qualified, available professionals for your temporary staffing needs.
             </p>
             <Button
-              size="sm"
               icon={ArrowRight}
-              className="mt-4 bg-accent-purple-500 text-white hover:bg-accent-purple-600"
+              className="mt-6 !bg-accent-purple-500 !text-white transition-transform hover:!bg-accent-purple-600 group-hover:translate-x-1"
+              onClick={() => navigate("/account")}
             >
               Join as an Organization
             </Button>
@@ -145,23 +167,54 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-gray-50 px-6 py-16 lg:px-10">
-        <h2 className="mb-12 text-center text-2xl font-bold text-gray-900">How HERMS Works</h2>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {HOW_IT_WORKS.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex flex-col items-center gap-3 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-primary-50 text-primary-500">
-                <Icon className="size-5" />
-              </span>
-              <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-              <p className="text-xs text-gray-500">{description}</p>
+      <section id="how-it-works" className="bg-gray-50 px-6 py-20 lg:px-10">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary-500">The Process</p>
+          <h2 className="mt-2 text-2xl font-bold text-gray-900 lg:text-3xl">How HERMS Works</h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-gray-500">
+            From profile to placement — a simple, fast process for both professionals and organizations.
+          </p>
+        </div>
+
+        <div className="mx-auto mt-12 flex max-w-6xl flex-col gap-4 lg:flex-row lg:items-stretch">
+          {HOW_IT_WORKS.map(({ icon: Icon, title, description }, index) => (
+            <div key={title} className="flex w-full items-center gap-3 lg:flex-1">
+              <div className="flex w-full flex-1 flex-col items-center gap-3 rounded-2xl bg-white p-6 text-center shadow-sm transition-shadow hover:shadow-md">
+                <span className="flex size-8 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white">
+                  {index + 1}
+                </span>
+                <span className="flex size-12 items-center justify-center rounded-full bg-primary-50 text-primary-500">
+                  <Icon className="size-5" />
+                </span>
+                <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+                <p className="text-xs text-gray-500">{description}</p>
+              </div>
+              {index < HOW_IT_WORKS.length - 1 && (
+                <ChevronRight className="hidden size-5 shrink-0 text-gray-300 lg:block" />
+              )}
             </div>
           ))}
         </div>
-        <div className="mt-10 flex justify-center">
-          <Button variant="secondary" icon={ArrowRight}>
-            Learn more about the process
-          </Button>
+      </section>
+
+      <section id="about" className="relative overflow-hidden bg-gray-900 px-6 py-16 text-white lg:px-10">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">About HERMS</p>
+            <h2 className="mt-3 text-2xl font-bold lg:text-3xl">
+              Opportunities that create change
+            </h2>
+            <p className="mt-3 max-w-md text-sm text-gray-300">
+              HERMS was built to make temporary and contract staffing simple for
+              South Africa's hospitals, clinics, schools and pharmacies — while
+              giving skilled professionals more flexible ways to work.
+            </p>
+          </div>
+          <div className="flex flex-col gap-1 text-sm text-gray-400 lg:items-end lg:text-right">
+            <span>People</span>
+            <span>Opportunities</span>
+            <span>Stronger Communities</span>
+          </div>
         </div>
       </section>
     </div>

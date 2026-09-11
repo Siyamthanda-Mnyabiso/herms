@@ -11,7 +11,7 @@ public class AddressFactory {
         if(!Helper.isPostalCodeValid(postalCode)){
             throw new IllegalArgumentException("Invalid postal code, should be 4 digits!");
         }
-        if(Helper.isCityValid(city)){
+        if(!Helper.isCityValid(city)){
             throw new IllegalArgumentException("Invalid city");
         }
         if(!Helper.isProvinceValid(province)){

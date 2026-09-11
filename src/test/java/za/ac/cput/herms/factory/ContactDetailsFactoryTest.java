@@ -11,6 +11,8 @@ class ContactDetailsFactoryTest {
     void createContactDetails() {
         ContactDetails contact = ContactDetailsFactory.createContactDetails("+27837659532","mangaliso@mycput.ac.za");
         assertNotNull(contact);
+        assertEquals("+27837659532",contact.getMobileNumber());
+        assertEquals("mangaliso@mycput.ac.za",contact.getEmail());
         System.out.println(contact);
 
     }

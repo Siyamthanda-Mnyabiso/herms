@@ -1,14 +1,14 @@
 import { NavLink } from "react-router-dom";
-import { Sparkle, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import hermsLogo from "../../assets/images/herms-logo.png";
 
 export default function Sidebar({ sections, user, onLogout }) {
   return (
     <aside className="flex h-screen w-60 shrink-0 flex-col bg-sidebar text-white">
-      <div className="flex items-center gap-2 px-5 py-5">
-        <span className="flex size-8 items-center justify-center rounded-lg bg-primary-500">
-          <Sparkle className="size-4" />
+      <div className="flex items-center px-5 py-5">
+        <span className="flex items-center rounded-xl bg-white px-2.5 py-2 shadow-sm">
+          <img src={hermsLogo} alt="HERMS" className="h-7 w-auto" />
         </span>
-        <span className="text-base font-bold">HERMS</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 pb-4">

@@ -44,12 +44,6 @@ export function AuthProvider({ children }) {
         return data;
     }, []);
 
-    const registerOrganization = useCallback(async (payload) => {
-        const data = await authService.registerOrganization(payload);
-        setUser(persist(data));
-        return data;
-    }, []);
-
     const logout = useCallback(async () => {
         try {
             await authService.logout();
@@ -66,7 +60,6 @@ export function AuthProvider({ children }) {
                 isAuthenticated: Boolean(user),
                 login,
                 registerProfessional,
-                registerOrganization,
                 logout,
             }}
         >

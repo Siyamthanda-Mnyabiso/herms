@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Button from "../../components/common/Button";
 import StatusBadge from "../../components/common/StatusBadge";
-import { useNotification } from "../../context/NotificationContext";
+import { useNotification } from "../../hooks/useNotification.js";
 import { approveOrganization, getOrganizations, rejectOrganization } from "../../services/adminService";
 
 const FILTERS = ["PENDING", "ACTIVE", "REJECTED"];

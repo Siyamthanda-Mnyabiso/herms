@@ -1,0 +1,24 @@
+# Local MySQL for development and tests.
+#   docker compose up -d
+# The backend reads MYSQL_PASSWORD from .env; use the same value here (default: password).
+# Stop any MySQL already running on this machine first, or change the port mapping below
+# (and MYSQL_HOST / the datasource URL accordingly).
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_DATABASE: herms_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - herms-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PASSWORD:-password}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  herms-mysql-data:

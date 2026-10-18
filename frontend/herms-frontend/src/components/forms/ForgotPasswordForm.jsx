@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Input from "../common/Input.jsx";
 import Button from "../common/Button.jsx";
-import { useNotification } from "../../context/NotificationContext.jsx";
+import { useNotification } from "../../hooks/useNotification.js";
 import { forgotPassword } from "../../services/authService.js";
 
 function ForgotPasswordForm(){

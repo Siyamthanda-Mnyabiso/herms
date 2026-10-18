@@ -4,7 +4,7 @@ import Input from "../common/Input.jsx";
 import Button from "../common/Button.jsx";
 import Select from "../common/Select.jsx";
 import Password from "../common/Password.jsx";
-import { useNotification } from "../../context/NotificationContext.jsx";
+import { useNotification } from "../../hooks/useNotification.js";
 import { registerOrganization } from "../../services/authService.js";
 
 const PROVINCES = [

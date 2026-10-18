@@ -1,4 +1,4 @@
-import { useShortlist } from "../../context/ShortlistContext";
+import { useShortlist } from "../../hooks/useShortlist.js";
 import CandidateCard from "../../components/cards/CandidateCard";
 
 export default function Shortlisted() {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Password from "../common/Password.jsx";
 import Button from "../common/Button.jsx";
-import { useNotification } from "../../context/NotificationContext.jsx";
+import { useNotification } from "../../hooks/useNotification.js";
 import { resetPassword } from "../../services/authService.js";
 
 function ResetPassword(){

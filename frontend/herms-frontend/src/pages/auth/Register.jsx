@@ -1,9 +1,6 @@
 
 import RegistrationForm from "../../components/forms/RegistrationForm.jsx";
-import Input from "../../components/common/Input.jsx";
 import hermsLogo from "../../assets/images/herms-logo.png";
-import Button from "../../components/common/Button.jsx";
-import {Link} from "react-router-dom";
 
 
 function Register(){

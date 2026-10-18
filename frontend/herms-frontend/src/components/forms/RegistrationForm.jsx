@@ -6,7 +6,7 @@ import Password from "../common/Password.jsx";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.js";
-import { useNotification } from "../../context/NotificationContext.jsx";
+import { useNotification } from "../../hooks/useNotification.js";
 import { dashboardPathForRole } from "../../utils/constants.js";
 
 const LICENSE_HINTS = {

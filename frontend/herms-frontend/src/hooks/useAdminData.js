@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllBookings, getUsers } from "../services/adminService";
-import { useNotification } from "../context/NotificationContext";
+import { useNotification } from "../hooks/useNotification.js";
 
 // Loads the account list and bookings that the admin pages summarize.
 export function useAdminData() {

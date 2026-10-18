@@ -8,8 +8,8 @@ import Pagination from "../../components/common/Pagination";
 import CandidateCard from "../../components/cards/CandidateCard";
 import { getCandidatesByProfession, getAllCandidates } from "../../services/candidateService";
 import { createBooking } from "../../services/bookingService";
-import { useNotification } from "../../context/NotificationContext";
-import { useShortlist } from "../../context/ShortlistContext";
+import { useNotification } from "../../hooks/useNotification.js";
+import { useShortlist } from "../../hooks/useShortlist.js";
 
 const PROFESSION_KEYWORDS = ["nurse", "doctor", "teacher", "pharmacist"];
 
@@ -41,11 +41,6 @@ export default function BrowseCandidates() {
     const { notify } = useNotification();
     const { isShortlisted, toggleShortlist } = useShortlist();
 
-
-    const searchMatchedProfession = PROFESSION_KEYWORDS.find(
-        (p) => p === searchTerm.trim().toLowerCase()
-    );
-    const activeProfession = searchMatchedProfession || profession;
 
     function handleError(err) {
         console.error("Failed to load professionals:", err);

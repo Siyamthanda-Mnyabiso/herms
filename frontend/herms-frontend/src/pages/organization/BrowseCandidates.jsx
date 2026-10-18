@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import SearchBar from "../../components/common/SearchBar";
 import Select from "../../components/common/Select";
+import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import Pagination from "../../components/common/Pagination";
 import CandidateCard from "../../components/cards/CandidateCard";
@@ -34,6 +35,9 @@ export default function BrowseCandidates() {
     const [location, setLocation] = useState("all");
     const [availability, setAvailability] = useState("all");
     const [selectedCandidate, setSelectedCandidate] = useState(null); // NEW
+    const todayIso = new Date().toLocaleDateString("en-CA"); // local YYYY-MM-DD
+    const [startDate, setStartDate] = useState(todayIso);
+    const [endDate, setEndDate] = useState(todayIso);
     const { notify } = useNotification();
     const { isShortlisted, toggleShortlist } = useShortlist();
 
@@ -279,6 +283,23 @@ export default function BrowseCandidates() {
                             </div>
                         </dl>
 
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                            <Input
+                                label="Start date"
+                                type="date"
+                                min={todayIso}
+                                value={startDate}
+                                onChange={(ev) => setStartDate(ev.target.value)}
+                            />
+                            <Input
+                                label="End date"
+                                type="date"
+                                min={startDate || todayIso}
+                                value={endDate}
+                                onChange={(ev) => setEndDate(ev.target.value)}
+                            />
+                        </div>
+
                         <div className="mt-6 flex gap-3">
                             <Button
                                 variant="secondary"
@@ -290,21 +311,14 @@ export default function BrowseCandidates() {
                             <Button
                                 variant="primary"
                                 fullWidth
+                                disabled={!startDate || !endDate || endDate < startDate}
                                 onClick={async () => {
                                     try {
-                                        const today = new Date();
-                                        const future = new Date();
-                                        future.setDate(today.getDate() + 7);
-                                        await createBooking(
-                                            selectedCandidate.id,
-                                            today.toISOString().split("T")[0],
-                                            future.toISOString().split("T")[0]
-                                        );
+                                        await createBooking(selectedCandidate.id, startDate, endDate);
                                         notify("Booking request sent!", "success");
                                         setSelectedCandidate(null);
                                     } catch (err) {
-                                        console.error("Failed to create booking:", err);
-                                        notify("Couldn't send booking request. Please try again.", "error");
+                                        notify(err.response?.data ?? "Couldn't send booking request. Please try again.", "error");
                                     }
                                 }}
                             >

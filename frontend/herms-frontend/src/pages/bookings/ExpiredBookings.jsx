@@ -1,17 +1,15 @@
 import { AlertTriangle } from "lucide-react";
-import { getBookingsByStatus, BOOKING_STATUS } from "./data/mockBookings";
+import { BOOKING_STATUS } from "../../utils/bookingStatus";
 import { STATUS_PAGE_META } from "./utils/bookingHelpers";
-import BookingStatusList from "../../components/cards/BookingStatusList";
+import BookingsByStatus from "../../components/cards/BookingsByStatus";
 
 const meta = STATUS_PAGE_META[BOOKING_STATUS.EXPIRED];
 
 export default function ExpiredBookings() {
-    const bookings = getBookingsByStatus(BOOKING_STATUS.EXPIRED);
-
     return (
-        <BookingStatusList
+        <BookingsByStatus
             title={meta.title}
-            bookings={bookings}
+            statuses={[BOOKING_STATUS.EXPIRED]}
             emptyMessage={meta.emptyMessage}
             banner={
                 <div className="flex items-start gap-3 rounded-2xl bg-status-expired-bg p-4 text-sm text-gray-600">

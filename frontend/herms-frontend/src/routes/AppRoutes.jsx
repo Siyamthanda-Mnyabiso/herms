@@ -24,6 +24,15 @@ import ProfessionalSkills from "../pages/professional/Skills";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+import AdminProfessionals from "../pages/admin/AdminProfessionals";
+import AdminBookings from "../pages/admin/AdminBookings";
+import AdminReports from "../pages/admin/AdminReports";
+import AccountSettings from "../pages/AccountSettings";
+import BookingsLayout from "../pages/organization/BookingsLayout";
+import MyBookings from "../pages/professional/MyBookings";
+import OrganizationProfile from "../pages/organization/OrganizationProfile";
+import AdminAuditLogs from "../pages/admin/AdminAuditLogs";
+import AdminAdmins from "../pages/admin/AdminAdmins";
 import AdminOrganizations from "../pages/admin/AdminOrganizations";
 import RegisterOrganization from "../pages/auth/RegisterOrganization.jsx";
 import AccountType from "../components/forms/AccountType.jsx";
@@ -56,12 +65,16 @@ export default function AppRoutes() {
           <Route index element={<OrganizationDashboard />} />
           <Route path="browse" element={<BrowseCandidates />} />
           <Route path="shortlisted" element={<Shortlisted />} />
-          <Route path="bookings" element={<PendingBookings />} />
-          <Route path="bookings/accepted" element={<AcceptedBookings />} />
-          <Route path="bookings/declined" element={<DeclinedBookings />} />
-          <Route path="bookings/expired" element={<ExpiredBookings />} />
-          <Route path="bookings/confirmed" element={<ConfirmedBookings />} />
-          <Route path="bookings/history" element={<BookingHistory />} />
+          <Route path="profile" element={<OrganizationProfile />} />
+          <Route path="settings" element={<AccountSettings />} />
+          <Route path="bookings" element={<BookingsLayout />}>
+            <Route index element={<PendingBookings />} />
+            <Route path="accepted" element={<AcceptedBookings />} />
+            <Route path="declined" element={<DeclinedBookings />} />
+            <Route path="expired" element={<ExpiredBookings />} />
+            <Route path="confirmed" element={<ConfirmedBookings />} />
+            <Route path="history" element={<BookingHistory />} />
+          </Route>
         </Route>
       </Route>
 
@@ -74,7 +87,7 @@ export default function AppRoutes() {
           <Route path="experience" element={<ProfessionalExperience />} />
           <Route path="skills" element={<ProfessionalSkills />} />
           <Route path="requests" element={<BookingRequest />} />
-          <Route path="bookings" element={<AcceptedBookings />} />
+          <Route path="bookings" element={<MyBookings />} />
           <Route path="bookings/history" element={<BookingHistory />} />
         </Route>
       </Route>
@@ -84,6 +97,12 @@ export default function AppRoutes() {
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="organizations" element={<AdminOrganizations />} />
+          <Route path="admins" element={<AdminAdmins />} />
+          <Route path="professionals" element={<AdminProfessionals />} />
+          <Route path="bookings" element={<AdminBookings />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="settings" element={<AccountSettings />} />
+          <Route path="audit-logs" element={<AdminAuditLogs />} />
         </Route>
       </Route>
 

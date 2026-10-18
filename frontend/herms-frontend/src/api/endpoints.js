@@ -5,6 +5,9 @@ export const ENDPOINTS = {
     LOGOUT: "/auth/logout",
     REGISTER_ORGANIZATION: "/auth/register/organization",
 
+    ADMIN_AUDIT_LOGS: "/admin/audit-logs",
+    ADMIN_USERS: "/admin/users",
+    ADMIN_ADMINS: "/admin/admins",
     ADMIN_ORGANIZATIONS: "/admin/organizations",
     ADMIN_ORGANIZATION_APPROVE: (id) => `/admin/organizations/${id}/approve`,
     ADMIN_ORGANIZATION_REJECT: (id) => `/admin/organizations/${id}/reject`,

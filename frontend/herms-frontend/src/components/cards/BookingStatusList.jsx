@@ -12,6 +12,7 @@ export default function BookingStatusList({
                                               emptyMessage,
                                               onAccept,
                                               onDecline,
+                                              onConfirm,
                                               onCancel,
                                               onViewDetails,
                                               banner,
@@ -62,6 +63,7 @@ export default function BookingStatusList({
                             booking={booking}
                             onAccept={onAccept}
                             onDecline={onDecline}
+                            onConfirm={onConfirm}
                             onCancel={onCancel}
                             onViewDetails={onViewDetails}
                         />

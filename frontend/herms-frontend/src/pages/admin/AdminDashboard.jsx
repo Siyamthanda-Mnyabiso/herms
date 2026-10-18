@@ -1,15 +1,14 @@
-import { Users, ArrowRight, CheckCircle2, FileBarChart, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Users, ArrowRight, CheckCircle2, FileBarChart, ChevronRight, Building2, Stethoscope, CalendarCheck, Clock } from "lucide-react";
+import { useAdminData } from "../../hooks/useAdminData";
+import { ORGANIZATION_ROLE_SET, PROFESSIONAL_ROLE_SET } from "../../utils/adminRoles";
 import Select from "../../components/common/Select";
 
-const STATS = [];
-
-const REGISTRATIONS = [];
-
-const BOOKING_BREAKDOWN = [
-  { label: "Pending", value: 0, color: "var(--color-status-pending)" },
-  { label: "Accepted", value: 0, color: "var(--color-primary-500)" },
-  { label: "Confirmed", value: 0, color: "var(--color-status-confirmed)" },
-  { label: "Completed", value: 0, color: "var(--color-status-completed)" },
+const BOOKING_SEGMENTS = [
+  { label: "Pending", status: "PENDING", color: "var(--color-status-pending)" },
+  { label: "Confirmed", status: "CONFIRMED", color: "var(--color-status-confirmed)" },
+  { label: "Completed", status: "COMPLETED", color: "var(--color-status-completed)" },
+  { label: "Canceled", status: "CANCELED", color: "var(--color-status-declined)" },
 ];
 
 function donutGradient(segments) {
@@ -26,6 +25,23 @@ function donutGradient(segments) {
 }
 
 export default function AdminDashboard() {
+  const { users, bookings } = useAdminData();
+
+  const STATS = [
+    { icon: Stethoscope, value: users.filter((u) => PROFESSIONAL_ROLE_SET.includes(u.role)).length, label: "Professionals" },
+    { icon: Building2, value: users.filter((u) => ORGANIZATION_ROLE_SET.includes(u.role) && u.status === "ACTIVE").length, label: "Organizations" },
+    { icon: Clock, value: users.filter((u) => ORGANIZATION_ROLE_SET.includes(u.role) && u.status === "PENDING").length, label: "Pending approvals" },
+    { icon: CalendarCheck, value: bookings.length, label: "Bookings" },
+  ];
+  const REGISTRATIONS = [...users]
+    .sort((a, b) => b.accountId - a.accountId)
+    .slice(0, 5)
+    .map((u) => ({ name: u.name, role: u.role }));
+  const BOOKING_BREAKDOWN = BOOKING_SEGMENTS.map((seg) => ({
+    ...seg,
+    value: bookings.filter((b) => b.status === seg.status).length,
+  }));
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -54,10 +70,10 @@ export default function AdminDashboard() {
         <div className="rounded-2xl bg-white p-5 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-gray-900">Recent Registrations</h2>
-            <button type="button" className="flex items-center gap-1 text-xs font-medium text-primary-500">
+            <Link to="/admin/users" className="flex items-center gap-1 text-xs font-medium text-primary-500">
               View all
               <ArrowRight className="size-3.5" />
-            </button>
+            </Link>
           </div>
           <div>
             {REGISTRATIONS.map((r) => (
@@ -66,7 +82,7 @@ export default function AdminDashboard() {
                   <Users className="size-4" />
                 </span>
                 <p className="flex-1 text-sm text-gray-800">{r.name}</p>
-                <p className="text-xs text-gray-400">{r.time}</p>
+                <p className="text-xs capitalize text-gray-400">{r.role}</p>
               </div>
             ))}
           </div>
@@ -93,10 +109,10 @@ export default function AdminDashboard() {
               ))}
             </div>
           </div>
-          <button type="button" className="mt-4 flex items-center gap-1 text-xs font-medium text-primary-500">
+          <Link to="/admin/reports" className="mt-4 flex items-center gap-1 text-xs font-medium text-primary-500">
             View all reports
             <ArrowRight className="size-3.5" />
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -111,8 +127,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <button
-          type="button"
+        <Link
+          to="/admin/reports"
           className="flex items-center gap-3 rounded-2xl bg-white p-5 text-left shadow-sm hover:bg-gray-50"
         >
           <span className="flex size-10 items-center justify-center rounded-full bg-primary-50 text-primary-500">
@@ -123,7 +139,7 @@ export default function AdminDashboard() {
             <p className="text-xs text-gray-500">Generate platform reports</p>
           </div>
           <ChevronRight className="size-4 text-gray-400" />
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, CalendarCheck, Inbox, UserCheck } from "lucide-react";
 import Button from "../../components/common/Button";
 import BookingCard from "../../components/cards/BookingCard";
-import { useUpcomingBookings } from "../../hooks/useBookings";
+import { useUpcomingBookings, useMyBookings } from "../../hooks/useBookings";
+import StatusBadge from "../../components/common/StatusBadge";
 import ErrorMessage from "../../components/common/ErrorMessage";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { useAuth } from "../../hooks/useAuth";
 import { getProfile, updateProfile } from "../../services/professionalService";
 import { useNotification } from "../../context/NotificationContext";
 
-const STATS = [];
-
-const PENDING_REQUESTS = [];
-
-
-
-const AVAILABLE_DATES = [];
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString("en-ZA", { day: "numeric", month: "short" }) : "—");
 
 export default function ProfessionalDashboard() {
   const { user } = useAuth();
@@ -24,6 +20,13 @@ export default function ProfessionalDashboard() {
   const [available, setAvailable] = useState(false);
   const [savingAvailability, setSavingAvailability] = useState(false);
   const { bookings: UPCOMING_BOOKINGS, loading, error, refetch } = useUpcomingBookings();
+  const { bookings: myBookings } = useMyBookings();
+  const PENDING_REQUESTS = useMemo(() => myBookings.filter((b) => b.status === "pending"), [myBookings]);
+  const STATS = [
+    { icon: CalendarCheck, value: UPCOMING_BOOKINGS.length, label: "Upcoming bookings" },
+    { icon: Inbox, value: PENDING_REQUESTS.length, label: "Pending requests" },
+    { icon: UserCheck, value: available ? "Available" : "Unavailable", label: "Status" },
+  ];
 
   useEffect(() => {
     if (!user?.role || !user?.refId) {
@@ -81,24 +84,24 @@ export default function ProfessionalDashboard() {
           <div className="rounded-2xl bg-white p-5 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-gray-900">Pending Requests</h2>
-              <button type="button" className="flex items-center gap-1 text-xs font-medium text-primary-500">
+              <Link to="/professional/requests" className="flex items-center gap-1 text-xs font-medium text-primary-500">
                 View all requests
                 <ArrowRight className="size-3.5" />
-              </button>
+              </Link>
             </div>
             <div>
+              {PENDING_REQUESTS.length === 0 && <p className="text-sm text-gray-400">No pending requests.</p>}
               {PENDING_REQUESTS.map((request) => (
                 <div
-                  key={request.org}
+                  key={request.id}
                   className="flex items-center justify-between gap-3 border-b border-gray-100 py-3 last:border-b-0"
                 >
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{request.org}</p>
-                    <p className="text-xs text-gray-500">{request.role}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">{request.dates}</p>
-                    <p className="text-xs font-medium text-status-pending">{request.left}</p>
+                  <p className="text-sm font-medium text-gray-900">{request.organization}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-xs text-gray-500">
+                      {formatDate(request.startDate)} – {formatDate(request.endDate)}
+                    </p>
+                    <StatusBadge status="pending" />
                   </div>
                 </div>
               ))}
@@ -108,16 +111,19 @@ export default function ProfessionalDashboard() {
           <div className="rounded-2xl bg-white p-5 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-gray-900">Upcoming Bookings</h2>
-              <button type="button" className="flex items-center gap-1 text-xs font-medium text-primary-500">
+              <Link to="/professional/bookings" className="flex items-center gap-1 text-xs font-medium text-primary-500">
                 View all bookings
                 <ArrowRight className="size-3.5" />
-              </button>
+              </Link>
             </div>
             <div>
               {loading && <LoadingSpinner />}
               {error && <ErrorMessage message={error} onRetry={refetch} />}
+              {!loading && !error && UPCOMING_BOOKINGS.length === 0 && (
+                <p className="text-sm text-gray-400">No upcoming bookings.</p>
+              )}
               {!loading && !error && UPCOMING_BOOKINGS.map((booking) => (
-                  <BookingCard key={booking.name} {...booking} />
+                  <BookingCard key={booking.id} {...booking} />
               ))}
             </div>
           </div>
@@ -146,14 +152,9 @@ export default function ProfessionalDashboard() {
             </button>
           </div>
 
-          <p className="mt-4 text-xs font-medium text-gray-400">Available Dates</p>
-          <div className="mt-2 flex flex-col gap-2">
-            {AVAILABLE_DATES.map((date) => (
-              <p key={date} className="text-sm text-gray-700">
-                {date}
-              </p>
-            ))}
-          </div>
+          <Link to="/professional/availability" className="mt-4 block text-xs font-medium text-primary-500">
+            Manage availability dates
+          </Link>
 
           <Button
             variant="amber"

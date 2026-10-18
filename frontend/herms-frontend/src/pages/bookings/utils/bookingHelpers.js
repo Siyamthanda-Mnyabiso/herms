@@ -1,4 +1,4 @@
-import { BOOKING_STATUS } from "../data/mockBookings";
+import { BOOKING_STATUS } from "../../../utils/bookingStatus";
 
 // A candidate's real identity is only revealed to the organization once the
 // professional has responded positively. Everywhere else in the UI, use
@@ -14,6 +14,8 @@ export function isIdentityRevealed(booking) {
 }
 
 export function displayName(booking) {
+    // Professionals see who is asking for them; organizations see the candidate.
+    if (booking.viewerRole === "professional") return booking.organization;
     return isIdentityRevealed(booking) ? booking.candidateName : booking.candidateLabel;
 }
 

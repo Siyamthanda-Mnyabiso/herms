@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -8,9 +8,12 @@ import {
   BarChart3,
   Settings,
   FileText,
-  Bell,
+  ShieldCheck,
 } from "lucide-react";
 import Sidebar from "../components/navigation/Sidebar";
+import TopBar from "../components/navigation/TopBar";
+import { useAuth } from "../hooks/useAuth.js";
+import { initialsOf } from "../utils/initials";
 
 const SECTIONS = [
   {
@@ -21,6 +24,7 @@ const SECTIONS = [
     title: "MANAGEMENT",
     items: [
       { label: "Users", icon: Users, to: "/admin/users" },
+      { label: "Admins", icon: ShieldCheck, to: "/admin/admins" },
       { label: "Organizations", icon: Building2, to: "/admin/organizations" },
       { label: "Professionals", icon: Stethoscope, to: "/admin/professionals" },
       { label: "Bookings", icon: CalendarCheck, to: "/admin/bookings" },
@@ -37,20 +41,25 @@ const SECTIONS = [
 ];
 
 export default function AdminLayout() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate("/login");
+  }
+
+  const initials = initialsOf(user?.name);
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar sections={SECTIONS} user={{ initials: "", name: "", role: "" }} />
+      <Sidebar
+        sections={SECTIONS}
+        user={{ initials, name: user?.name ?? "", role: user?.role ?? "" }}
+        onLogout={handleLogout}
+      />
       <div className="flex flex-1 flex-col">
-        <header className="flex items-center justify-end gap-4 border-b border-gray-100 bg-white px-6 py-3">
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="flex size-9 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100"
-          >
-            <Bell className="size-4" />
-          </button>
-          <span className="flex size-9 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-600" />
-        </header>
+        <TopBar initials={initials} />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>

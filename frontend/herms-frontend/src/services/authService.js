@@ -24,6 +24,16 @@ export async function registerOrganization(payload) {
     return response.data;
 }
 
+export async function forgotPassword(email) {
+    const response = await api.post(ENDPOINTS.FORGOT_PASSWORD, { email });
+    return response.data;
+}
+
+export async function resetPassword(token, password) {
+    const response = await api.post(ENDPOINTS.RESET_PASSWORD, { token, password });
+    return response.data;
+}
+
 export async function logout() {
     await api.post(ENDPOINTS.LOGOUT);
 }

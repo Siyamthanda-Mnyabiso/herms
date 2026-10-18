@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import za.ac.cput.herms.domain.Person;
 
 public class Helper {
@@ -148,7 +149,36 @@ public class Helper {
         return isDoctorLicenseNoValid(licenseNo);
     }
 
+    // BCrypt only uses the first 72 bytes of a password, so longer ones are rejected up front.
+    private static final int MAX_PASSWORD_BYTES = 72;
+    private static final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
+    public static boolean isPasswordTooLong(String password){
+        return password != null && password.getBytes(StandardCharsets.UTF_8).length > MAX_PASSWORD_BYTES;
+    }
+
     public static String hashPassword(String password){
+        return PASSWORD_ENCODER.encode(password);
+    }
+
+    public static boolean matchesPassword(String rawPassword, String hashedPassword){
+        if (rawPassword == null || hashedPassword == null || isPasswordTooLong(rawPassword)) {
+            return false;
+        }
+        if (isLegacyHash(hashedPassword)) {
+            return MessageDigest.isEqual(
+                    legacySha256(rawPassword).getBytes(StandardCharsets.UTF_8),
+                    hashedPassword.getBytes(StandardCharsets.UTF_8));
+        }
+        return PASSWORD_ENCODER.matches(rawPassword, hashedPassword);
+    }
+
+    /** True for hashes created before BCrypt (unsalted SHA-256 hex); they get upgraded at the next login. */
+    public static boolean isLegacyHash(String hashedPassword){
+        return hashedPassword != null && hashedPassword.matches("^[0-9a-f]{64}$");
+    }
+
+    private static String legacySha256(String password){
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -160,13 +190,6 @@ public class Helper {
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("SHA-256 algorithm not available", e);
         }
-    }
-
-    public static boolean matchesPassword(String rawPassword, String hashedPassword){
-        if (rawPassword == null || hashedPassword == null) {
-            return false;
-        }
-        return hashPassword(rawPassword).equals(hashedPassword);
     }
 
 }

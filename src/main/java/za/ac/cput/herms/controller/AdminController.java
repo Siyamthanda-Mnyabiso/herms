@@ -108,6 +108,9 @@ public class AdminController {
         if (request.getPassword() == null || request.getPassword().length() < 8) {
             return ResponseEntity.badRequest().body("Password must be at least 8 characters");
         }
+        if (Helper.isPasswordTooLong(request.getPassword())) {
+            return ResponseEntity.badRequest().body("Password must be at most 72 characters");
+        }
         String email = request.getEmail().trim();
         if (accountRepository.existsByEmail(email)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with this email already exists");

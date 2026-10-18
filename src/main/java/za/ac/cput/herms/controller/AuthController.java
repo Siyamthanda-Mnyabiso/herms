@@ -10,13 +10,16 @@ import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.domain.organization.School;
 import za.ac.cput.herms.dto.AuthResponse;
 import za.ac.cput.herms.dto.LoginRequest;
+import za.ac.cput.herms.dto.ForgotPasswordRequest;
 import za.ac.cput.herms.dto.RegisterOrganizationRequest;
+import za.ac.cput.herms.dto.ResetPasswordRequest;
 import za.ac.cput.herms.dto.RegisterProfessionalRequest;
 import za.ac.cput.herms.factory.AddressFactory;
 import za.ac.cput.herms.factory.ContactDetailsFactory;
 import za.ac.cput.herms.repository.AccountRepository;
 import za.ac.cput.herms.service.AuditLogService;
 import za.ac.cput.herms.service.IStaffService;
+import za.ac.cput.herms.service.PasswordResetService;
 import za.ac.cput.herms.service.organization.IHospitalService;
 import za.ac.cput.herms.service.organization.IPharmacyService;
 import za.ac.cput.herms.service.organization.ISchoolService;
@@ -36,6 +39,7 @@ public class AuthController {
     private final IPharmacyService pharmacyService;
     private final ISchoolService schoolService;
     private final AuditLogService auditLog;
+    private final PasswordResetService passwordReset;
 
     @Autowired
     public AuthController(AccountRepository accountRepository,
@@ -43,17 +47,25 @@ public class AuthController {
                            IHospitalService hospitalService,
                            IPharmacyService pharmacyService,
                            ISchoolService schoolService,
-                           AuditLogService auditLog) {
+                           AuditLogService auditLog,
+                           PasswordResetService passwordReset) {
         this.accountRepository = accountRepository;
         this.staffService = staffService;
         this.hospitalService = hospitalService;
         this.pharmacyService = pharmacyService;
         this.schoolService = schoolService;
         this.auditLog = auditLog;
+        this.passwordReset = passwordReset;
     }
 
     @PostMapping("/register/professional")
     public ResponseEntity<?> registerProfessional(@RequestBody RegisterProfessionalRequest request) {
+        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            return ResponseEntity.badRequest().body("Password is required");
+        }
+        if (Helper.isPasswordTooLong(request.getPassword())) {
+            return ResponseEntity.badRequest().body("Password must be at most 72 characters");
+        }
         if (accountRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with this email already exists");
         }
@@ -139,6 +151,9 @@ public class AuthController {
         }
         if (request.getPassword() == null || request.getPassword().length() < 8) {
             return ResponseEntity.badRequest().body("Password must be at least 8 characters");
+        }
+        if (Helper.isPasswordTooLong(request.getPassword())) {
+            return ResponseEntity.badRequest().body("Password must be at most 72 characters");
         }
         if (Helper.isNullOrEmpty(request.getOrganizationType()) || request.getOrganizationType().isBlank()) {
             return ResponseEntity.badRequest().body("Organization type is required");
@@ -227,6 +242,9 @@ public class AuthController {
         }
 
         Account account = found.get();
+        if (Helper.isLegacyHash(account.getPasswordHash())) {
+            account.setPasswordHash(Helper.hashPassword(request.getPassword()));
+        }
         if (!Account.STATUS_ACTIVE.equals(account.getStatus())) {
             auditLog.record(account.getEmail(), "LOGIN_BLOCKED", "account:" + account.getAccountId(),
                     "status=" + account.getStatus());
@@ -245,6 +263,28 @@ public class AuthController {
 
         return ResponseEntity.ok(new AuthResponse(
                 account.getToken(), account.getRole(), account.getRefId(), displayNameFor(account), account.getEmail()));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        passwordReset.requestReset(request.getEmail());
+        // Same answer whether or not the email has an account.
+        return ResponseEntity.accepted()
+                .body(Map.of("message", "If that email has an account, a reset link is on its way."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        if (request.getPassword() == null || request.getPassword().length() < 8) {
+            return ResponseEntity.badRequest().body("Password must be at least 8 characters");
+        }
+        if (Helper.isPasswordTooLong(request.getPassword())) {
+            return ResponseEntity.badRequest().body("Password must be at most 72 characters");
+        }
+        if (!passwordReset.resetPassword(request.getToken(), request.getPassword())) {
+            return ResponseEntity.badRequest().body("This reset link is invalid or has expired");
+        }
+        return ResponseEntity.ok(Map.of("message", "Password updated. You can now log in."));
     }
 
     @PostMapping("/logout")

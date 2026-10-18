@@ -9,7 +9,7 @@ import ErrorMessage from "../../components/common/ErrorMessage";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import { useAuth } from "../../hooks/useAuth";
 import { getProfile, updateProfile } from "../../services/professionalService";
-import { useNotification } from "../../context/NotificationContext";
+import { useNotification } from "../../hooks/useNotification.js";
 
 const formatDate = (value) => (value ? new Date(value).toLocaleDateString("en-ZA", { day: "numeric", month: "short" }) : "—");
 

@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useCallback } from "react";
-
-const ShortlistContext = createContext(null);
+import { useState, useCallback } from "react";
+import { ShortlistContext } from "./objects/shortlist.js";
 
 export function ShortlistProvider({ children }) {
     const [shortlisted, setShortlisted] = useState([]);
@@ -23,8 +22,4 @@ export function ShortlistProvider({ children }) {
             {children}
         </ShortlistContext.Provider>
     );
-}
-
-export function useShortlist() {
-    return useContext(ShortlistContext);
 }

@@ -63,11 +63,6 @@ public class Helper {
             Map.entry("Western Cape", "Western Cape")
     );
     public static boolean isProvinceValid(String str){
-//        System.out.println("Province received: '" + str + "'");
-        System.out.println("Province received: '" + str + "'");
-        System.out.println("Contains WC: " + provinces.containsKey("WC"));
-        System.out.println("All keys: " + provinces.keySet());
-
         if ((str==null) || (str.isBlank())) {
             return false;
         }

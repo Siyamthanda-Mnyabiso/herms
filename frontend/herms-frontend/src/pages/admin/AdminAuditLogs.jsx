@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Select from "../../components/common/Select";
 import Pagination from "../../components/common/Pagination";
-import { useNotification } from "../../context/NotificationContext";
+import { useNotification } from "../../hooks/useNotification.js";
 import { getAuditLogs } from "../../services/adminService";
 
 const ACTIONS = [

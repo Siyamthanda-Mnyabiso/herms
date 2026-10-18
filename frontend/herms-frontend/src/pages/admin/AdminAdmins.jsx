@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
-import { useNotification } from "../../context/NotificationContext";
+import { useNotification } from "../../hooks/useNotification.js";
 import { createAdmin, getAdmins } from "../../services/adminService";
 
 export default function AdminAdmins() {

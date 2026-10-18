@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useProfessionalProfile } from "../../hooks/useProfessionalProfile";
 import { updateProfile } from "../../services/professionalService";
-import { useNotification } from "../../context/NotificationContext";
+import { useNotification } from "../../hooks/useNotification.js";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import LoadingSpinner from "../../components/common/LoadingSpinner";

@@ -35,7 +35,6 @@ import AdminAuditLogs from "../pages/admin/AdminAuditLogs";
 import AdminAdmins from "../pages/admin/AdminAdmins";
 import AdminOrganizations from "../pages/admin/AdminOrganizations";
 import RegisterOrganization from "../pages/auth/RegisterOrganization.jsx";
-import AccountType from "../components/forms/AccountType.jsx";
 import Account from "../pages/auth/Account.jsx";
 import ResetPassword from "../pages/auth/ResetPassword.jsx";
 

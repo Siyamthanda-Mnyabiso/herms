@@ -30,7 +30,6 @@ export function CandidatePreviewCard({ id, role, matchPercent, rating, availabil
 }
 
 export default function CandidateCard({
-  id,
   name,
   profession_number,
   skills,
@@ -39,7 +38,6 @@ export default function CandidateCard({
   onViewDetails,
     isShortlisted,
     onToggleShortlist,
-    ...rest
 }) {
   return (
       <div className="...">

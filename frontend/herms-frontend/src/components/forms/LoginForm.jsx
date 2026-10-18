@@ -5,7 +5,7 @@ import Button from "../common/Button.jsx";
 import AuthHeader from  "../common/AuthHeader.jsx"
 import Password from "../common/Password.jsx"
 import { useAuth } from "../../hooks/useAuth.js";
-import { useNotification } from "../../context/NotificationContext.jsx";
+import { useNotification } from "../../hooks/useNotification.js";
 import { dashboardPathForRole } from "../../utils/constants.js";
 
 function LoginForm() {

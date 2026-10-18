@@ -1,7 +1,6 @@
-import { createContext, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
+import { AuthContext } from "./objects/auth.js";
 import * as authService from "../services/authService";
-
-export const AuthContext = createContext(null);
 
 function readStoredUser() {
     try {

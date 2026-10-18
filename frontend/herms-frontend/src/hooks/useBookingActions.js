@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useNotification } from "../context/NotificationContext";
+import { useNotification } from "../hooks/useNotification.js";
 import { acceptBooking, cancelBooking, confirmBooking, declineBooking } from "../services/bookingService";
 
 // Wraps each booking action: call the API, tell the user how it went, then reload the list.

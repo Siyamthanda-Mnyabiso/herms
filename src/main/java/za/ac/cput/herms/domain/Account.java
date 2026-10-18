@@ -9,6 +9,10 @@ import jakarta.persistence.Id;
 @Entity
 public class Account {
 
+    public static final String STATUS_ACTIVE = "ACTIVE";
+    public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_REJECTED = "REJECTED";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
@@ -27,14 +31,22 @@ public class Account {
 
     private String token;
 
+    // Null on rows created before approval existed; treated as ACTIVE.
+    private String status;
+
     protected Account() {
     }
 
     public Account(String email, String passwordHash, String role, String refId) {
+        this(email, passwordHash, role, refId, STATUS_ACTIVE);
+    }
+
+    public Account(String email, String passwordHash, String role, String refId, String status) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.role = role;
         this.refId = refId;
+        this.status = status;
     }
 
     public Long getAccountId() {
@@ -63,5 +75,13 @@ public class Account {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getStatus() {
+        return status == null ? STATUS_ACTIVE : status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

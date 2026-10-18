@@ -19,6 +19,11 @@ export async function registerProfessional({ role, firstName, lastName, email, p
     return response.data;
 }
 
+export async function registerOrganization(payload) {
+    const response = await api.post(ENDPOINTS.REGISTER_ORGANIZATION, payload);
+    return response.data;
+}
+
 export async function logout() {
     await api.post(ENDPOINTS.LOGOUT);
 }

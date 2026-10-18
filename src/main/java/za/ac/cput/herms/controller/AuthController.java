@@ -10,7 +10,10 @@ import za.ac.cput.herms.domain.organization.Pharmacy;
 import za.ac.cput.herms.domain.organization.School;
 import za.ac.cput.herms.dto.AuthResponse;
 import za.ac.cput.herms.dto.LoginRequest;
+import za.ac.cput.herms.dto.RegisterOrganizationRequest;
 import za.ac.cput.herms.dto.RegisterProfessionalRequest;
+import za.ac.cput.herms.factory.AddressFactory;
+import za.ac.cput.herms.factory.ContactDetailsFactory;
 import za.ac.cput.herms.repository.AccountRepository;
 import za.ac.cput.herms.service.IStaffService;
 import za.ac.cput.herms.service.organization.IHospitalService;
@@ -18,6 +21,7 @@ import za.ac.cput.herms.service.organization.IPharmacyService;
 import za.ac.cput.herms.service.organization.ISchoolService;
 import za.ac.cput.herms.util.Helper;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -123,6 +127,87 @@ public class AuthController {
                 .body(new AuthResponse(account.getToken(), role, account.getRefId(), fullName, request.getEmail()));
     }
 
+    @PostMapping("/register/organization")
+    public ResponseEntity<?> registerOrganization(@RequestBody RegisterOrganizationRequest request) {
+        if (Helper.isNullOrEmpty(request.getOrganizationName()) || request.getOrganizationName().isBlank()) {
+            return ResponseEntity.badRequest().body("Organization name is required");
+        }
+        if (request.getPassword() == null || request.getPassword().length() < 8) {
+            return ResponseEntity.badRequest().body("Password must be at least 8 characters");
+        }
+        if (Helper.isNullOrEmpty(request.getOrganizationType()) || request.getOrganizationType().isBlank()) {
+            return ResponseEntity.badRequest().body("Organization type is required");
+        }
+        if (Helper.isEmailValid(request.getEmail()) && accountRepository.existsByEmail(request.getEmail().trim())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with this email already exists");
+        }
+
+        ContactDetails contactDetails;
+        Address address;
+        try {
+            contactDetails = ContactDetailsFactory.createContactDetails(request.getPhoneNumber(), request.getEmail());
+            address = AddressFactory.createAddress(request.getStreetName(), request.getPostalCode(),
+                    request.getCity(), request.getProvince());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+        String role = request.getRole() == null ? "" : request.getRole().toLowerCase();
+        String organizationId = UUID.randomUUID().toString();
+        String name = request.getOrganizationName().trim();
+
+        try {
+            switch (role) {
+                case "hospital": {
+                    Hospital.Builder builder = new Hospital.Builder()
+                            .setOrganizationId(organizationId)
+                            .setOrganizationName(name)
+                            .setContactDetails(contactDetails)
+                            .setHospitalType(request.getOrganizationType())
+                            .setTypeOfHospital(Hospital.HospitalType.valueOf(request.getSector()));
+                    builder.setAddress(address);
+                    hospitalService.Create(builder.build());
+                    break;
+                }
+                case "pharmacy": {
+                    Pharmacy.Builder builder = new Pharmacy.Builder()
+                            .setOrganizationId(organizationId)
+                            .setOrganizationName(name)
+                            .setContactDetails(contactDetails)
+                            .setPharmacyType(request.getOrganizationType());
+                    builder.setAddress(address);
+                    pharmacyService.Create(builder.build());
+                    break;
+                }
+                case "school": {
+                    School.Builder builder = new School.Builder()
+                            .setOrganizationId(organizationId)
+                            .setOrganizationName(name)
+                            .setContactDetails(contactDetails)
+                            .setSchoolType(request.getOrganizationType())
+                            .setType(School.Type.valueOf(request.getSector()))
+                            .setSchoolTypeOfSchool(School.SchoolType.valueOf(request.getSchoolLevel()));
+                    builder.setAddress(address);
+                    schoolService.Create(builder.build());
+                    break;
+                }
+                default:
+                    return ResponseEntity.badRequest().body("Unknown organization role: " + request.getRole());
+            }
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return ResponseEntity.badRequest().body("Invalid organization sector or school level");
+        }
+
+        accountRepository.save(new Account(request.getEmail().trim(),
+                Helper.hashPassword(request.getPassword()),
+                role,
+                organizationId,
+                Account.STATUS_PENDING));
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(Map.of("message", "Registration received. An admin will review your organization before you can log in."));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         Optional<Account> found = request.getEmail() == null
@@ -134,6 +219,14 @@ public class AuthController {
         }
 
         Account account = found.get();
+        if (Account.STATUS_PENDING.equals(account.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your registration is awaiting admin approval");
+        }
+        if (Account.STATUS_REJECTED.equals(account.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your registration was not approved");
+        }
         account.setToken(UUID.randomUUID().toString());
         accountRepository.save(account);
 

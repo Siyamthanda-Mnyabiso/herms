@@ -3,6 +3,11 @@ export const ENDPOINTS = {
     LOGIN: "/auth/login",
     REGISTER_PROFESSIONAL: "/auth/register/professional",
     LOGOUT: "/auth/logout",
+    REGISTER_ORGANIZATION: "/auth/register/organization",
+
+    ADMIN_ORGANIZATIONS: "/admin/organizations",
+    ADMIN_ORGANIZATION_APPROVE: (id) => `/admin/organizations/${id}/approve`,
+    ADMIN_ORGANIZATION_REJECT: (id) => `/admin/organizations/${id}/reject`,
 
     BOOKINGS_CREATE: "/Bookings/create",
     BOOKINGS_READ: (id) => `/Bookings/Read/${id}`,

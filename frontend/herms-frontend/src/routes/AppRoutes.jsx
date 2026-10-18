@@ -24,6 +24,8 @@ import ProfessionalSkills from "../pages/professional/Skills";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminUsers from "../pages/admin/AdminUsers";
+import AdminOrganizations from "../pages/admin/AdminOrganizations";
+import RegisterOrganization from "../pages/auth/RegisterOrganization.jsx";
 import AccountType from "../components/forms/AccountType.jsx";
 import Account from "../pages/auth/Account.jsx";
 import ResetPassword from "../pages/auth/ResetPassword.jsx";
@@ -43,6 +45,7 @@ export default function AppRoutes() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/register/organization" element={<RegisterOrganization />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/account" element={<Account/>} />
         <Route path="/reset-password" element={<ResetPassword/>} />
@@ -76,9 +79,12 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="users" element={<AdminUsers />} />
+      <Route element={<RoleRoute roles={["admin"]} />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="organizations" element={<AdminOrganizations />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -5,6 +5,7 @@ const STATUS_STYLES = {
   completed: "text-status-completed bg-status-completed-bg",
   declined: "text-status-declined bg-status-declined-bg",
   expired: "text-status-expired bg-status-expired-bg",
+  rejected: "text-status-declined bg-status-declined-bg",
   active: "text-status-accepted bg-status-accepted-bg",
   inactive: "text-status-expired bg-status-expired-bg",
   available: "text-status-accepted bg-status-accepted-bg",

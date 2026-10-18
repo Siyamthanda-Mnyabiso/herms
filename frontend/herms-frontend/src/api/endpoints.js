@@ -3,6 +3,8 @@ export const ENDPOINTS = {
     LOGIN: "/auth/login",
     REGISTER_PROFESSIONAL: "/auth/register/professional",
     LOGOUT: "/auth/logout",
+    FORGOT_PASSWORD: "/auth/forgot-password",
+    RESET_PASSWORD: "/auth/reset-password",
     REGISTER_ORGANIZATION: "/auth/register/organization",
 
     ADMIN_AUDIT_LOGS: "/admin/audit-logs",

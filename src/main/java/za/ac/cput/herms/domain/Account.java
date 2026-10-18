@@ -73,6 +73,10 @@ public class Account {
         return token;
     }
 
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
     public void setToken(String token) {
         this.token = token;
     }

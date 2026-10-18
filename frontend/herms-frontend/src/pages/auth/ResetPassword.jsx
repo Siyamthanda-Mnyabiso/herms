@@ -1,8 +1,5 @@
-import Password from "../../components/common/Password.jsx";
-import Button from "../../components/common/Button.jsx";
 import hermsLogo from "../../assets/images/herms-logo.png";
 import ResetPasswordForm from "../../components/forms/ResetPasswordForm.jsx";
-import ForgotPasswordForm from "../../components/forms/ForgotPasswordForm.jsx";
 
 
 function ResetPassword() {

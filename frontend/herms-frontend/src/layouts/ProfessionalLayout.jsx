@@ -8,9 +8,10 @@ import {
   Star,
   CalendarCheck,
   Inbox,
-  Bell,
 } from "lucide-react";
 import Sidebar from "../components/navigation/Sidebar";
+import TopBar from "../components/navigation/TopBar";
+import { initialsOf } from "../utils/initials";
 import { useAuth } from "../hooks/useAuth.js";
 
 const SECTIONS = [
@@ -46,9 +47,7 @@ export default function ProfessionalLayout() {
     navigate("/login");
   }
 
-  const initials = user?.name
-    ? user.name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase()
-    : "";
+  const initials = initialsOf(user?.name);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -58,16 +57,7 @@ export default function ProfessionalLayout() {
         onLogout={handleLogout}
       />
       <div className="flex flex-1 flex-col">
-        <header className="flex items-center justify-end gap-4 border-b border-gray-100 bg-white px-6 py-3">
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="flex size-9 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100"
-          >
-            <Bell className="size-4" />
-          </button>
-          <span className="flex size-9 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-600" />
-        </header>
+        <TopBar initials={initials} />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>

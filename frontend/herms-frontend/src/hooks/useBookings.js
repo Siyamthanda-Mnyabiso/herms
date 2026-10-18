@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { getUpcomingBookings, getAllBookings } from "../services/bookingService";
+import { getUpcomingBookings, getMyBookings } from "../services/bookingService";
 
-export function useUpcomingBookings() {
+function useLoader(loadFn, errorMessage) {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,14 +10,13 @@ export function useUpcomingBookings() {
         setLoading(true);
         setError(null);
         try {
-            const data = await getUpcomingBookings();
-            setBookings(data);
-        } catch (err) {
-            setError("Couldn't load bookings. Check your connection and try again.");
+            setBookings(await loadFn());
+        } catch {
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [loadFn, errorMessage]);
 
     useEffect(() => {
         fetchBookings();
@@ -25,27 +24,12 @@ export function useUpcomingBookings() {
 
     return { bookings, loading, error, refetch: fetchBookings };
 }
-export function useAllBookings() {
-    const [bookings, setBookings] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    const fetchBookings = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const data = await getAllBookings();
-            setBookings(data);
-        } catch (err) {
-            setError("Couldn't load booking requests. Check your connection and try again.");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+export function useUpcomingBookings() {
+    return useLoader(getUpcomingBookings, "Couldn't load bookings. Check your connection and try again.");
+}
 
-    useEffect(() => {
-        fetchBookings();
-    }, [fetchBookings]);
-
-    return { bookings, loading, error, refetch: fetchBookings };
+// Every booking that belongs to the signed-in organization or professional.
+export function useMyBookings() {
+    return useLoader(getMyBookings, "Couldn't load bookings. Check your connection and try again.");
 }

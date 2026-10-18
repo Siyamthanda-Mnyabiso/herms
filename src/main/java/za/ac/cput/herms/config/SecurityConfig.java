@@ -38,6 +38,13 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/logout", "/auth/register/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/Bookings/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/booking-requests/mine")
+                        .hasAnyRole("HOSPITAL", "PHARMACY", "SCHOOL", "DOCTOR", "NURSE", "TEACHER", "PHARMACIST")
+                        .requestMatchers(HttpMethod.POST, "/booking-requests/*/accept", "/booking-requests/*/decline")
+                        .hasAnyRole("DOCTOR", "NURSE", "TEACHER", "PHARMACIST")
+                        .requestMatchers("/booking-requests", "/booking-requests/**")
+                        .hasAnyRole("HOSPITAL", "PHARMACY", "SCHOOL")
                         .anyRequest().authenticated())
                 .addFilterBefore(new TokenAuthenticationFilter(accountRepository),
                         UsernamePasswordAuthenticationFilter.class);

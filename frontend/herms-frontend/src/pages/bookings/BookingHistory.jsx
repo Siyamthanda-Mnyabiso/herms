@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import Select from "../../components/common/Select";
 import BookingStatusList from "../../components/cards/BookingStatusList";
-import { mockBookings } from "./data/mockBookings";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import ErrorMessage from "../../components/common/ErrorMessage";
+import { useMyBookings } from "../../hooks/useBookings";
 
 const FILTERS = [
     { value: "all", label: "All Statuses" },
@@ -15,19 +17,21 @@ const FILTERS = [
 ];
 
 export default function BookingHistory() {
+    const { bookings, loading, error, refetch } = useMyBookings();
     const [filter, setFilter] = useState("all");
 
-    const bookings = useMemo(() => {
-        const sorted = [...mockBookings].sort(
-            (a, b) => new Date(b.requestedAt) - new Date(a.requestedAt)
-        );
-        return filter === "all" ? sorted : sorted.filter((b) => b.status === filter);
-    }, [filter]);
+    const shown = useMemo(
+        () => (filter === "all" ? bookings : bookings.filter((b) => b.status === filter)),
+        [bookings, filter]
+    );
+
+    if (loading) return <LoadingSpinner />;
+    if (error) return <ErrorMessage message={error} onRetry={refetch} />;
 
     return (
         <BookingStatusList
             title="Booking History"
-            bookings={bookings}
+            bookings={shown}
             emptyMessage="No bookings match this filter."
             banner={
                 <Select

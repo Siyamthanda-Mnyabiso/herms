@@ -101,11 +101,15 @@ public class Helper {
         }
         return startDay.before(endDay);
     }
+    // Persisted as the enum's ordinal: only ever append new values, never reorder.
     public enum BookingStatus{
         PENDING,
         CONFIRMED,
         CANCELED,
-        COMPLETED
+        COMPLETED,
+        ACCEPTED,
+        DECLINED,
+        EXPIRED
     }
 
     public static boolean isPersonNullOrEmpty(Person person){

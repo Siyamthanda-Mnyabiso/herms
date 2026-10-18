@@ -15,6 +15,7 @@ import za.ac.cput.herms.dto.RegisterProfessionalRequest;
 import za.ac.cput.herms.factory.AddressFactory;
 import za.ac.cput.herms.factory.ContactDetailsFactory;
 import za.ac.cput.herms.repository.AccountRepository;
+import za.ac.cput.herms.service.AuditLogService;
 import za.ac.cput.herms.service.IStaffService;
 import za.ac.cput.herms.service.organization.IHospitalService;
 import za.ac.cput.herms.service.organization.IPharmacyService;
@@ -34,18 +35,21 @@ public class AuthController {
     private final IHospitalService hospitalService;
     private final IPharmacyService pharmacyService;
     private final ISchoolService schoolService;
+    private final AuditLogService auditLog;
 
     @Autowired
     public AuthController(AccountRepository accountRepository,
                            IStaffService staffService,
                            IHospitalService hospitalService,
                            IPharmacyService pharmacyService,
-                           ISchoolService schoolService) {
+                           ISchoolService schoolService,
+                           AuditLogService auditLog) {
         this.accountRepository = accountRepository;
         this.staffService = staffService;
         this.hospitalService = hospitalService;
         this.pharmacyService = pharmacyService;
         this.schoolService = schoolService;
+        this.auditLog = auditLog;
     }
 
     @PostMapping("/register/professional")
@@ -121,6 +125,7 @@ public class AuthController {
                 String.valueOf(person.getPersonId()));
         account.setToken(UUID.randomUUID().toString());
         accountRepository.save(account);
+        auditLog.record(request.getEmail(), "REGISTER_PROFESSIONAL", "account:" + account.getAccountId(), "role=" + role);
 
         String fullName = (request.getFirstName() + " " + request.getLastName()).trim();
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -198,11 +203,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Invalid organization sector or school level");
         }
 
-        accountRepository.save(new Account(request.getEmail().trim(),
+        Account saved = accountRepository.save(new Account(request.getEmail().trim(),
                 Helper.hashPassword(request.getPassword()),
                 role,
                 organizationId,
                 Account.STATUS_PENDING));
+        auditLog.record(saved.getEmail(), "REGISTER_ORGANIZATION", "account:" + saved.getAccountId(),
+                "role=" + role + ", name=" + name);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(Map.of("message", "Registration received. An admin will review your organization before you can log in."));
@@ -215,10 +222,15 @@ public class AuthController {
                 : accountRepository.findByEmail(request.getEmail());
 
         if (found.isEmpty() || !Helper.matchesPassword(request.getPassword(), found.get().getPasswordHash())) {
+            auditLog.record(request.getEmail(), "LOGIN_FAILED", null, null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
 
         Account account = found.get();
+        if (!Account.STATUS_ACTIVE.equals(account.getStatus())) {
+            auditLog.record(account.getEmail(), "LOGIN_BLOCKED", "account:" + account.getAccountId(),
+                    "status=" + account.getStatus());
+        }
         if (Account.STATUS_PENDING.equals(account.getStatus())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Your registration is awaiting admin approval");
@@ -229,6 +241,7 @@ public class AuthController {
         }
         account.setToken(UUID.randomUUID().toString());
         accountRepository.save(account);
+        auditLog.record(account.getEmail(), "LOGIN", "account:" + account.getAccountId(), "role=" + account.getRole());
 
         return ResponseEntity.ok(new AuthResponse(
                 account.getToken(), account.getRole(), account.getRefId(), displayNameFor(account), account.getEmail()));

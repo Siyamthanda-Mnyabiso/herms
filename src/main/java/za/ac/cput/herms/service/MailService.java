@@ -22,7 +22,7 @@ public class MailService {
     private final ObjectProvider<JavaMailSender> mailSender;
     private final String from;
 
-    public MailService(ObjectProvider<JavaMailSender> mailSender, @Value("${herms.mail.from}") String from) {
+    public MailService(ObjectProvider<JavaMailSender> mailSender, @Value("${herms.mail.from:no-reply@herms.local}") String from) {
         this.mailSender = mailSender;
         this.from = from;
     }

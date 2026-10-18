@@ -34,7 +34,7 @@ public class PasswordResetService {
     private final SecureRandom random = new SecureRandom();
 
     public PasswordResetService(AccountRepository accounts, PasswordResetTokenRepository tokens, MailService mail,
-                                AuditLogService auditLog, @Value("${herms.frontend-url}") String frontendUrl) {
+                                AuditLogService auditLog, @Value("${herms.frontend-url:http://localhost:5173}") String frontendUrl) {
         this.accounts = accounts;
         this.tokens = tokens;
         this.mail = mail;

@@ -17,12 +17,12 @@ public class SchoolService implements ISchoolService {
 
     @Override
     public List<School> getAll() {
-        return List.of();
+        return schoolService.findAll();
     }
 
     @Override
     public School getSchoolById(String organizationId) {
-        return getSchoolById(organizationId);
+        return schoolService.findByOrganizationId(organizationId);
     }
 
     @Override
